@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Formación y acompañamiento de SIDEP para fortalecer la sostenibilidad social, empresarial y ambiental."/>
+  <title>Sostenibilidad Social, Empresarial y Ambiental – Instituto SIDEP</title>
+  <link rel="icon" type="image/webp" href="https://sidep.edu.co/assets/Favicon.webp"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0EA5E9',
+            accent:  '#A3E635',
+            amber:   '#F59E0B',
+            dark:    '#12233F',
+            darker:  '#081529'
+          },
+          fontFamily: { nunito: ['Nunito', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    *{font-family:'Nunito',sans-serif;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:#12233F;
+      background-image:
+        radial-gradient(ellipse at 12% 6%,rgba(14,165,233,.16) 0%,transparent 55%),
+        radial-gradient(ellipse at 86% 90%,rgba(163,230,53,.10) 0%,transparent 58%);
+    }
+    .blob{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;opacity:.18}
+    #navbar{transition:background .3s,box-shadow .3s}
+    #navbar.scrolled{background:rgba(8,21,41,.97)!important;box-shadow:0 4px 30px rgba(0,0,0,.45)}
+    .grad-text{
+      background:linear-gradient(135deg,#A3E635 0%,#0EA5E9 58%,#F59E0B 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s,transform .7s}
+    .reveal.up{opacity:1;transform:translateY(0)}
+    .aline::after{content:'';display:block;width:54px;height:4px;background:#A3E635;border-radius:2px;margin-top:10px}
+    .aline-c::after{content:'';display:block;width:54px;height:4px;background:#A3E635;border-radius:2px;margin:10px auto 0}
+    .glass{
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.09);
+      backdrop-filter:blur(12px);
+      border-radius:1.25rem;
+      transition:.3s;
+    }
+    .glass:hover{background:rgba(255,255,255,.08);border-color:rgba(14,165,233,.42);transform:translateY(-4px)}
+    .gb-card{
+      background:linear-gradient(#12233F,#12233F) padding-box,
+                 linear-gradient(135deg,#A3E635,#0EA5E9,#F59E0B) border-box;
+      border:2px solid transparent;
+      border-radius:1.25rem;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      background:rgba(14,165,233,.12);
+      border:1px solid rgba(14,165,233,.35);
+      color:#7DD3FC;
+      border-radius:999px;
+      padding:.35rem .95rem;
+      font-size:.75rem;
+      font-weight:800;
+      letter-spacing:.05em;
+    }
+    .form-input{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1.5px solid rgba(255,255,255,.12);
+      border-radius:.75rem;
+      padding:.875rem 1rem;
+      color:white;
+      font-size:.9rem;
+      outline:none;
+      transition:.2s;
+    }
+    .form-input::placeholder{color:rgba(255,255,255,.35)}
+    .form-input:focus{border-color:#A3E635;background:rgba(163,230,53,.06)}
+    .marquee-track{display:flex;gap:2rem;will-change:transform}
+    .marquee-outer{overflow:hidden}
+    .accordion-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+    .accordion-body.open{max-height:460px}
+    .accordion-btn svg{transition:transform .3s}
+    .accordion-btn.open svg{transform:rotate(180deg)}
+    .orbit{position:relative;width:330px;height:330px;margin:auto}
+    .orbit-ring{position:absolute;inset:38px;border:1px dashed rgba(255,255,255,.2);border-radius:50%;animation:spin 24s linear infinite}
+    .orbit-core{position:absolute;left:50%;top:50%;width:132px;height:132px;transform:translate(-50%,-50%);border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(135deg,#0EA5E9,#075985);box-shadow:0 0 55px rgba(14,165,233,.35)}
+    .orbit-node{position:absolute;width:92px;height:92px;border-radius:1.15rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:.72rem;font-weight:900;box-shadow:0 12px 28px rgba(0,0,0,.28)}
+    .orbit-social{left:0;top:28px;background:#F59E0B;color:#081529}
+    .orbit-business{right:0;top:28px;background:#0EA5E9;color:white}
+    .orbit-environment{left:50%;bottom:0;transform:translateX(-50%);background:#A3E635;color:#081529}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes ring{0%{box-shadow:0 0 0 0 rgba(163,230,53,.5)}70%{box-shadow:0 0 0 14px rgba(163,230,53,0)}100%{box-shadow:0 0 0 0 rgba(163,230,53,0)}}
+    .pulse-ring{animation:ring 2s infinite}
+    @keyframes waPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 12px rgba(37,211,102,0)}}
+    #wa-float{animation:waPulse 2.2s infinite}
+    #shairo-wrap{position:fixed;bottom:1.75rem;right:1.75rem;z-index:60;cursor:pointer}
+    #shairo-tooltip{position:absolute;bottom:calc(100% + 12px);right:0;width:250px;background:#081529;border:1.5px solid #A3E635;border-radius:1rem;padding:1rem;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .3s,transform .3s;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+    #shairo-wrap:hover #shairo-tooltip,#shairo-wrap.active #shairo-tooltip{opacity:1;pointer-events:all;transform:translateY(0)}
+    #shairo-tooltip::after{content:'';position:absolute;bottom:-10px;right:24px;border:5px solid transparent;border-top-color:#A3E635}
+    @media(max-width:640px){
+      .orbit{width:280px;height:280px}
+      .orbit-core{width:112px;height:112px}
+      .orbit-node{width:78px;height:78px;font-size:.65rem}
+      #shairo-tooltip{right:-10px;width:215px}
+    }
+  </style>
+</head>
+<body class="text-white">
+
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50" style="background:rgba(18,35,63,.92);backdrop-filter:blur(16px)">
+    <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-16 relative">
+      <a href="https://sidep.edu.co/" class="flex items-center flex-shrink-0 hover:opacity-90 transition" aria-label="Ir al inicio de SIDEP">
+        <img src="https://sidep.edu.co/assets/SIDEP_logo1.webp" alt="Logo SIDEP" class="h-10 w-auto"/>
+      </a>
+      <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6">
+        <a href="https://sidep.edu.co/" class="text-white/70 hover:text-accent font-semibold text-sm transition">Inicio</a>
+        <span class="text-white/15">|</span>
+        <a href="https://sidep.edu.co/#servicios" class="text-white/70 hover:text-accent font-semibold text-sm transition">Líneas de servicio</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="#hero-form" class="pulse-ring bg-accent text-darker font-black px-5 py-2.5 rounded-xl hover:bg-[#BEF264] transition text-sm shadow-lg">Solicita información</a>
+        <button id="mob-btn" onclick="toggleMobileMenu()" class="md:hidden text-white p-1.5 rounded-lg hover:bg-white/10 transition" aria-label="Abrir menú">
+          <svg id="ham-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mob-menu" class="hidden border-t border-white/10" style="background:rgba(8,21,41,.98)">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
+        <a href="https://sidep.edu.co/" class="px-4 py-3 rounded-xl hover:bg-white/10 text-white/80 hover:text-accent font-semibold text-sm transition">Inicio</a>
+        <a href="https://sidep.edu.co/#servicios" class="px-4 py-3 rounded-xl hover:bg-white/10 text-white/80 hover:text-accent font-semibold text-sm transition">Líneas de servicio</a>
+        <a href="#hero-form" onclick="toggleMobileMenu()" class="mt-1 text-center bg-accent text-darker font-black px-5 py-3 rounded-xl text-sm">Solicita información</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section id="hero" class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+      <div class="blob w-[520px] h-[520px] bg-primary -top-20 -left-20"></div>
+      <div class="blob w-[420px] h-[420px] bg-accent top-1/2 right-0"></div>
+      <div class="max-w-6xl mx-auto px-4 w-full py-16 grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <div class="mb-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-black text-sm tracking-wide" style="background:linear-gradient(135deg,#0EA5E9,#075985);box-shadow:0 4px 22px rgba(14,165,233,.35)">🌱 Sostenibilidad integral</div>
+          <h1 class="text-4xl md:text-5xl font-black leading-tight mb-6">
+            Transforma tus decisiones en acciones que generan<br/>
+            <span class="grad-text">valor para el futuro</span>
+          </h1>
+          <p class="text-white/70 text-lg font-medium mb-8 leading-relaxed max-w-xl">
+            Fortalecemos personas, empresas y comunidades para integrar el desarrollo sostenible, la economía circular y la gestión ambiental responsable en sus proyectos y organizaciones.
+          </p>
+          <div class="flex flex-wrap gap-4 mb-10">
+            <div class="flex items-center gap-2 text-sm font-semibold text-white/80"><span class="text-accent text-lg">✓</span> Visión social</div>
+            <div class="flex items-center gap-2 text-sm font-semibold text-white/80"><span class="text-accent text-lg">✓</span> Gestión empresarial</div>
+            <div class="flex items-center gap-2 text-sm font-semibold text-white/80"><span class="text-accent text-lg">✓</span> Acción ambiental</div>
+            <div class="flex items-center gap-2 text-sm font-semibold text-white/80"><span class="text-accent text-lg">♻</span> Economía circular</div>
+          </div>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="glass p-4 text-center"><p class="text-xl font-black text-amber">Social</p><p class="text-xs text-white/55 font-semibold mt-1">Bienestar</p></div>
+            <div class="glass p-4 text-center"><p class="text-xl font-black text-primary">Empresarial</p><p class="text-xs text-white/55 font-semibold mt-1">Gestión</p></div>
+            <div class="glass p-4 text-center"><p class="text-xl font-black text-accent">Ambiental</p><p class="text-xs text-white/55 font-semibold mt-1">Equilibrio</p></div>
+          </div>
+        </div>
+
+        <div id="hero-form" class="gb-card p-8 reveal" style="transition-delay:.2s">
+          <p class="text-accent font-black text-xs uppercase tracking-widest mb-1">Construyamos una ruta</p>
+          <h2 class="text-2xl font-black mb-2">Solicita información gratis</h2>
+          <p class="text-white/50 text-sm font-medium mb-6">Cuéntanos qué necesita tu comunidad, empresa o institución y un asesor te orientará.</p>
+          <form id="info-form" class="space-y-4">
+            <div>
+              <label for="nombre" class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">Nombre completo</label>
+              <input id="nombre" type="text" placeholder="Ej: María Gómez" class="form-input" required/>
+            </div>
+            <div>
+              <label for="telefono" class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">WhatsApp</label>
+              <input id="telefono" type="tel" placeholder="+57 300 000 0000" class="form-input"/>
+            </div>
+            <div>
+              <label for="correo" class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">Correo electrónico</label>
+              <input id="correo" type="email" placeholder="tucorreo@gmail.com" class="form-input"/>
+            </div>
+            <div>
+              <label class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">Servicio de interés</label>
+              <div class="form-input text-white/60 cursor-not-allowed select-none flex items-center gap-2"><span class="text-accent">🌱</span> Sostenibilidad integral</div>
+            </div>
+            <button type="submit" class="w-full bg-accent text-darker font-black py-4 rounded-xl hover:bg-[#BEF264] transition text-base shadow-xl mt-2">💬 Quiero recibir orientación</button>
+            <p class="text-white/30 text-xs text-center">Al continuar, abrirás WhatsApp con tu solicitud preparada.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div class="py-4 overflow-hidden border-y border-white/5 bg-darker marquee-outer">
+      <div class="marquee-track whitespace-nowrap text-sm font-bold text-white/30 uppercase tracking-widest">
+        <span>Desarrollo sostenible</span><span class="text-accent mx-6">●</span>
+        <span>Economía circular</span><span class="text-accent mx-6">●</span>
+        <span>Gestión ambiental</span><span class="text-accent mx-6">●</span>
+        <span>Valor compartido</span><span class="text-accent mx-6">●</span>
+        <span>Consumo responsable</span><span class="text-accent mx-6">●</span>
+        <span>Cultura sostenible</span><span class="text-accent mx-6">●</span>
+        <span>Desarrollo sostenible</span><span class="text-accent mx-6">●</span>
+        <span>Economía circular</span><span class="text-accent mx-6">●</span>
+        <span>Gestión ambiental</span><span class="text-accent mx-6">●</span>
+        <span>Valor compartido</span><span class="text-accent mx-6">●</span>
+        <span>Consumo responsable</span><span class="text-accent mx-6">●</span>
+        <span>Cultura sostenible</span><span class="text-accent mx-6">●</span>
+      </div>
+    </div>
+
+    <section class="py-24 relative overflow-hidden">
+      <div class="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-14 items-center">
+        <div class="reveal">
+          <div class="pill mb-5">🌍 Una visión conectada</div>
+          <h2 class="text-4xl font-black mb-6 aline leading-tight">Sostenibilidad que une propósito, gestión y territorio</h2>
+          <p class="text-white/60 font-medium leading-relaxed mb-5">
+            La sostenibilidad no es una acción aislada. Es una forma de tomar decisiones considerando a las personas, la permanencia de las organizaciones y el cuidado del entorno.
+          </p>
+          <p class="text-white/60 font-medium leading-relaxed">
+            SIDEP desarrolla experiencias formativas y procesos de acompañamiento que permiten comprender retos, diseñar soluciones y convertir el conocimiento en prácticas responsables.
+          </p>
+        </div>
+        <div class="reveal" style="transition-delay:.15s">
+          <div class="orbit" aria-label="Tres dimensiones de la sostenibilidad">
+            <div class="orbit-ring"></div>
+            <div class="orbit-core"><div><div class="text-4xl mb-1">♻️</div><p class="font-black text-sm">Sostenibilidad<br/>integral</p></div></div>
+            <div class="orbit-node orbit-social"><span class="text-2xl mb-1">🤝</span>Dimensión<br/>social</div>
+            <div class="orbit-node orbit-business"><span class="text-2xl mb-1">🏢</span>Dimensión<br/>empresarial</div>
+            <div class="orbit-node orbit-environment"><span class="text-2xl mb-1">🌿</span>Dimensión<br/>ambiental</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-darker relative overflow-hidden">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-14 reveal">
+          <div class="pill mx-auto mb-5">🔎 Tres dimensiones</div>
+          <h2 class="text-4xl font-black aline-c">Un enfoque para generar valor sostenible</h2>
+          <p class="text-white/50 mt-5 font-medium">Cada dimensión aporta herramientas distintas y se integra en una misma ruta de transformación.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <article class="glass p-8 reveal border border-amber/20">
+            <div class="w-14 h-14 rounded-2xl bg-amber/15 flex items-center justify-center text-3xl mb-5">🤝</div>
+            <p class="text-amber font-black text-xs uppercase tracking-widest mb-2">Personas y comunidades</p>
+            <h3 class="text-xl font-black mb-3">Sostenibilidad social</h3>
+            <p class="text-white/50 text-sm font-medium leading-relaxed">Promueve inclusión, participación, bienestar y relaciones responsables con los grupos de interés.</p>
+          </article>
+          <article class="glass p-8 reveal border border-primary/20" style="transition-delay:.1s">
+            <div class="w-14 h-14 rounded-2xl bg-primary/15 flex items-center justify-center text-3xl mb-5">🏢</div>
+            <p class="text-primary font-black text-xs uppercase tracking-widest mb-2">Organizaciones</p>
+            <h3 class="text-xl font-black mb-3">Sostenibilidad empresarial</h3>
+            <p class="text-white/50 text-sm font-medium leading-relaxed">Integra propósito, eficiencia, innovación y continuidad en la gestión y la toma de decisiones.</p>
+          </article>
+          <article class="glass p-8 reveal border border-accent/20" style="transition-delay:.2s">
+            <div class="w-14 h-14 rounded-2xl bg-accent/15 flex items-center justify-center text-3xl mb-5">🌿</div>
+            <p class="text-accent font-black text-xs uppercase tracking-widest mb-2">Entorno y recursos</p>
+            <h3 class="text-xl font-black mb-3">Sostenibilidad ambiental</h3>
+            <p class="text-white/50 text-sm font-medium leading-relaxed">Fortalece el uso responsable de recursos, la gestión de residuos y la cultura de cuidado ambiental.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 relative">
+      <div class="max-w-5xl mx-auto px-4">
+        <div class="text-center mb-14 reveal">
+          <div class="pill mx-auto mb-5">🧭 Ruta de acompañamiento</div>
+          <h2 class="text-4xl font-black aline-c">De la intención a la acción</h2>
+          <p class="text-white/50 mt-5 font-medium max-w-2xl mx-auto">Una ruta flexible que se adapta a las necesidades de cada empresa, institución o comunidad.</p>
+        </div>
+        <div class="space-y-4 reveal">
+          <div class="glass overflow-hidden">
+            <button class="accordion-btn w-full flex items-center justify-between gap-4 p-6 text-left" onclick="toggleAccordion(this)">
+              <span class="flex items-center gap-4"><span class="w-11 h-11 rounded-xl bg-primary/15 text-primary flex items-center justify-center font-black">01</span><span><strong class="block text-lg">Reconocer el contexto</strong><small class="text-white/45 font-semibold">Necesidades, retos y oportunidades</small></span></span>
+              <svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="accordion-body"><p class="px-6 pb-6 pl-[5.75rem] text-white/55 font-medium text-sm leading-relaxed">Identificamos actores, prácticas actuales y prioridades para construir una formación conectada con la realidad del territorio u organización.</p></div>
+          </div>
+          <div class="glass overflow-hidden">
+            <button class="accordion-btn w-full flex items-center justify-between gap-4 p-6 text-left" onclick="toggleAccordion(this)">
+              <span class="flex items-center gap-4"><span class="w-11 h-11 rounded-xl bg-amber/15 text-amber flex items-center justify-center font-black">02</span><span><strong class="block text-lg">Diseñar la estrategia</strong><small class="text-white/45 font-semibold">Objetivos, contenidos y acciones</small></span></span>
+              <svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="accordion-body"><p class="px-6 pb-6 pl-[5.75rem] text-white/55 font-medium text-sm leading-relaxed">Organizamos una ruta con metodologías, temas y actividades apropiadas para los públicos involucrados y los resultados esperados.</p></div>
+          </div>
+          <div class="glass overflow-hidden">
+            <button class="accordion-btn w-full flex items-center justify-between gap-4 p-6 text-left" onclick="toggleAccordion(this)">
+              <span class="flex items-center gap-4"><span class="w-11 h-11 rounded-xl bg-accent/15 text-accent flex items-center justify-center font-black">03</span><span><strong class="block text-lg">Aprender haciendo</strong><small class="text-white/45 font-semibold">Formación y práctica aplicada</small></span></span>
+              <svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="accordion-body"><p class="px-6 pb-6 pl-[5.75rem] text-white/55 font-medium text-sm leading-relaxed">Desarrollamos talleres, experiencias y proyectos aplicados para convertir los conceptos de sostenibilidad en capacidades útiles.</p></div>
+          </div>
+          <div class="glass overflow-hidden">
+            <button class="accordion-btn w-full flex items-center justify-between gap-4 p-6 text-left" onclick="toggleAccordion(this)">
+              <span class="flex items-center gap-4"><span class="w-11 h-11 rounded-xl bg-white/10 text-white flex items-center justify-center font-black">04</span><span><strong class="block text-lg">Fortalecer la continuidad</strong><small class="text-white/45 font-semibold">Seguimiento y mejora</small></span></span>
+              <svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="accordion-body"><p class="px-6 pb-6 pl-[5.75rem] text-white/55 font-medium text-sm leading-relaxed">Orientamos la revisión de aprendizajes y próximos pasos para que las acciones puedan mantenerse, evolucionar y generar valor en el tiempo.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-darker relative overflow-hidden">
+      <div class="blob w-[440px] h-[440px] bg-primary right-0 top-0 opacity-10"></div>
+      <div class="max-w-6xl mx-auto px-4 relative">
+        <div class="text-center mb-14 reveal">
+          <div class="pill mx-auto mb-5">🛠️ Líneas de acción</div>
+          <h2 class="text-4xl font-black aline-c">Formación para retos reales</h2>
+          <p class="text-white/50 mt-5 font-medium max-w-2xl mx-auto">Los contenidos se organizan según el contexto y pueden combinarse dentro de una misma propuesta.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="glass p-6 reveal"><div class="text-3xl mb-4">♻️</div><h3 class="font-black text-lg mb-2">Economía circular</h3><p class="text-white/50 text-sm font-medium">Prevención, aprovechamiento y nuevas formas de comprender los residuos.</p></div>
+          <div class="glass p-6 reveal" style="transition-delay:.07s"><div class="text-3xl mb-4">💧</div><h3 class="font-black text-lg mb-2">Uso responsable de recursos</h3><p class="text-white/50 text-sm font-medium">Hábitos y prácticas para cuidar agua, energía y materiales.</p></div>
+          <div class="glass p-6 reveal" style="transition-delay:.14s"><div class="text-3xl mb-4">🌎</div><h3 class="font-black text-lg mb-2">Cultura ambiental</h3><p class="text-white/50 text-sm font-medium">Sensibilización y participación para transformar comportamientos.</p></div>
+          <div class="glass p-6 reveal" style="transition-delay:.21s"><div class="text-3xl mb-4">📊</div><h3 class="font-black text-lg mb-2">Gestión sostenible</h3><p class="text-white/50 text-sm font-medium">Criterios para integrar sostenibilidad a procesos y decisiones.</p></div>
+          <div class="glass p-6 reveal" style="transition-delay:.28s"><div class="text-3xl mb-4">🤲</div><h3 class="font-black text-lg mb-2">Valor compartido</h3><p class="text-white/50 text-sm font-medium">Relaciones responsables entre organizaciones, personas y territorios.</p></div>
+          <div class="glass p-6 reveal" style="transition-delay:.35s"><div class="text-3xl mb-4">💡</div><h3 class="font-black text-lg mb-2">Innovación sostenible</h3><p class="text-white/50 text-sm font-medium">Soluciones creativas que equilibran impacto, viabilidad y cuidado.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 relative overflow-hidden">
+      <div class="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-14 items-center">
+        <div class="reveal">
+          <div class="pill mb-5">👥 ¿Para quién es?</div>
+          <h2 class="text-4xl font-black mb-6 aline">Una propuesta adaptable a distintos públicos</h2>
+          <p class="text-white/60 font-medium leading-relaxed mb-8">La ruta puede construirse para equipos de trabajo, instituciones educativas, organizaciones sociales, entidades públicas o comunidades.</p>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="glass p-4 flex items-center gap-3"><span class="text-2xl">🏢</span><span class="font-bold text-sm">Empresas y emprendimientos</span></div>
+            <div class="glass p-4 flex items-center gap-3"><span class="text-2xl">🏫</span><span class="font-bold text-sm">Instituciones educativas</span></div>
+            <div class="glass p-4 flex items-center gap-3"><span class="text-2xl">🏛️</span><span class="font-bold text-sm">Entidades públicas</span></div>
+            <div class="glass p-4 flex items-center gap-3"><span class="text-2xl">🤝</span><span class="font-bold text-sm">Comunidades y organizaciones</span></div>
+          </div>
+        </div>
+        <div class="gb-card p-8 reveal" style="transition-delay:.15s">
+          <p class="text-accent font-black text-sm uppercase tracking-widest mb-5">Capacidades que se fortalecen</p>
+          <div class="space-y-5">
+            <div class="flex items-start gap-4"><span class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">🧠</span><div><h3 class="font-black">Pensamiento sistémico</h3><p class="text-white/45 text-sm">Comprender cómo se relacionan decisiones, actores e impactos.</p></div></div>
+            <div class="flex items-start gap-4"><span class="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center flex-shrink-0">🎯</span><div><h3 class="font-black">Planeación responsable</h3><p class="text-white/45 text-sm">Definir acciones realistas, pertinentes y coherentes con el contexto.</p></div></div>
+            <div class="flex items-start gap-4"><span class="w-10 h-10 rounded-xl bg-amber/15 flex items-center justify-center flex-shrink-0">🤲</span><div><h3 class="font-black">Trabajo colaborativo</h3><p class="text-white/45 text-sm">Construir soluciones mediante diálogo, participación y corresponsabilidad.</p></div></div>
+            <div class="flex items-start gap-4"><span class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">📈</span><div><h3 class="font-black">Mejora continua</h3><p class="text-white/45 text-sm">Revisar aprendizajes y fortalecer prácticas sostenibles en el tiempo.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-darker relative overflow-hidden">
+      <div class="blob w-[560px] h-[560px] bg-accent opacity-5 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+      <div class="max-w-3xl mx-auto px-4 text-center relative z-10 reveal">
+        <div class="text-7xl mb-6">🌱</div>
+        <h2 class="text-4xl md:text-5xl font-black mb-5 leading-tight">Construyamos hoy las capacidades que necesita el <span class="grad-text">futuro</span></h2>
+        <p class="text-white/60 font-medium text-lg mb-10 max-w-2xl mx-auto">Conversemos sobre los retos de tu organización o comunidad y diseñemos una ruta de formación conectada con sus necesidades.</p>
+        <a href="https://wa.me/573026291451?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Sostenibilidad%20Social%2C%20Empresarial%20y%20Ambiental%20de%20SIDEP" target="_blank" rel="noopener" class="inline-flex items-center gap-3 bg-green-500 hover:bg-green-400 text-white font-black px-9 py-5 rounded-2xl text-lg transition shadow-2xl">💬 Hablar con un asesor</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-darker border-t border-white/5 py-10">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-5">
+      <div class="flex items-center gap-3">
+        <a href="https://sidep.edu.co/" class="hover:opacity-80 transition"><img src="https://sidep.edu.co/assets/SIDEP_logo1.webp" alt="Logo SIDEP" class="h-10 w-auto"/></a>
+        <span class="text-white/30 text-sm font-medium">Sostenibilidad integral</span>
+      </div>
+      <p class="text-white/30 text-xs font-medium text-center">© 2026 Instituto SIDEP<br/>Servicios Integrales de Desarrollo Educativo y Profesional</p>
+      <a href="https://wa.me/573026291451?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Sostenibilidad%20Social%2C%20Empresarial%20y%20Ambiental%20de%20SIDEP" target="_blank" rel="noopener" class="text-green-400 hover:text-green-300 font-bold text-sm transition">WhatsApp: +57 302 6291451</a>
+    </div>
+  </footer>
+
+  <div id="shairo-wrap" onclick="this.classList.toggle('active')">
+    <div id="shairo-tooltip">
+      <p class="text-accent font-black text-sm mb-1">¡Hola! Soy Shairo 🐾</p>
+      <p class="text-white/70 text-xs font-medium leading-relaxed mb-3">Te ayudo a conocer la línea de Sostenibilidad Social, Empresarial y Ambiental. ¿Hablamos?</p>
+      <a href="https://wa.me/573026291451?text=Hola%20Shairo%2C%20quiero%20informaci%C3%B3n%20sobre%20la%20l%C3%ADnea%20de%20Sostenibilidad%20de%20SIDEP" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 bg-green-500 text-white font-black px-4 py-2.5 rounded-xl text-sm hover:bg-green-400 transition">¡Hablemos por WhatsApp!</a>
+    </div>
+    <img src="https://sidep.edu.co/assets/SHAIRO.webp" alt="Shairo, mascota de SIDEP" class="w-16 h-16 rounded-full object-cover border-4 border-accent shadow-2xl hover:scale-110 transition-transform"/>
+  </div>
+
+  <a id="wa-float" href="https://wa.me/573026291451?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Sostenibilidad%20Social%2C%20Empresarial%20y%20Ambiental%20de%20SIDEP" target="_blank" rel="noopener" aria-label="Hablar por WhatsApp" class="fixed bottom-6 left-6 z-50 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform">
+    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script>
+    const whatsappNumber = '573026291451';
+
+    function toggleMobileMenu(){
+      document.getElementById('mob-menu').classList.toggle('hidden');
+    }
+
+    function toggleAccordion(button){
+      const body = button.nextElementSibling;
+      const wasOpen = body.classList.contains('open');
+      document.querySelectorAll('.accordion-body').forEach(item => item.classList.remove('open'));
+      document.querySelectorAll('.accordion-btn').forEach(item => item.classList.remove('open'));
+      if(!wasOpen){
+        body.classList.add('open');
+        button.classList.add('open');
+      }
+    }
+
+    document.getElementById('info-form').addEventListener('submit', function(event){
+      event.preventDefault();
+      const nombre = document.getElementById('nombre').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const mensaje = `Hola, soy ${nombre}. Quiero información sobre la línea de Sostenibilidad Social, Empresarial y Ambiental de SIDEP.${telefono ? ` Mi número es ${telefono}.` : ''}${correo ? ` Mi correo es ${correo}.` : ''}`;
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(mensaje)}`, '_blank', 'noopener');
+    });
+
+    window.addEventListener('scroll', function(){
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('up');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold:.12});
+    document.querySelectorAll('.reveal').forEach(item => observer.observe(item));
+
+    document.addEventListener('click', function(event){
+      const wrap = document.getElementById('shairo-wrap');
+      if(wrap && !wrap.contains(event.target)) wrap.classList.remove('active');
+    });
+
+    (function(){
+      const track = document.querySelector('.marquee-track');
+      if(!track) return;
+      const speed = 90;
+      let position = 0;
+      let lastTime = null;
+      function move(timestamp){
+        if(!lastTime) lastTime = timestamp;
+        const delta = (timestamp - lastTime) / 1000;
+        lastTime = timestamp;
+        position -= speed * delta;
+        const half = track.scrollWidth / 2;
+        if(Math.abs(position) >= half) position = 0;
+        track.style.transform = `translateX(${position}px)`;
+        requestAnimationFrame(move);
+      }
+      requestAnimationFrame(move);
+    })();
+  </script>
+</body>
+</html>

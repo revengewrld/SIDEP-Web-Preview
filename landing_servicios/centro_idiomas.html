@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Centro de Idiomas – Instituto SIDEP</title>
+  <link rel="icon" type="image/webp" href="https://sidep.edu.co/assets/Favicon.webp"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1E40AF',
+            accent:  '#FACC15',
+            cyan:    '#FB7185',
+            dark:    '#0B1F3A',
+            darker:  '#061126',
+          },
+          fontFamily: { nunito: ['Nunito','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    *{font-family:'Nunito',sans-serif;}
+    html{scroll-behavior:smooth;}
+
+    /* ── BG texture ── */
+    body{background:#0B1F3A;background-image:radial-gradient(ellipse at 20% 10%,rgba(251,113,133,.09) 0%,transparent 60%),radial-gradient(ellipse at 80% 90%,rgba(30,64,175,.22) 0%,transparent 60%);}
+
+    /* ── Glow blobs ── */
+    .blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;opacity:.18;}
+
+    /* ── Navbar ── */
+    #navbar{transition:background .3s,box-shadow .3s;}
+    #navbar.scrolled{background:rgba(6,17,38,.97)!important;box-shadow:0 4px 30px rgba(0,0,0,.5);}
+
+    /* ── Hero gradient text ── */
+    .grad-text{background:linear-gradient(135deg,#FACC15 0%,#FB7185 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+    /* ── Section reveal ── */
+    .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s,transform .7s;}
+    .reveal.up{opacity:1;transform:translateY(0);}
+
+    /* ── Accent line ── */
+    .aline::after{content:'';display:block;width:52px;height:4px;background:#FACC15;border-radius:2px;margin-top:10px;}
+    .aline-c::after{content:'';display:block;width:52px;height:4px;background:#FACC15;border-radius:2px;margin:10px auto 0;}
+
+    /* ── Cards ── */
+    .glass{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(12px);border-radius:1.25rem;transition:.3s;}
+    .glass:hover{background:rgba(255,255,255,.08);border-color:rgba(251,113,133,.4);transform:translateY(-4px);}
+
+    /* ── Componentes de la ruta accordion ── */
+    .accordion-body{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+    .accordion-body.open{max-height:600px;}
+    .accordion-btn svg{transition:transform .3s;}
+    .accordion-btn.open svg{transform:rotate(180deg);}
+
+    /* ── Timeline ── */
+    .tl-line{position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#FACC15,#FB7185);transform:translateX(-50%);}
+
+    /* ── Shairo mascot — always fixed bottom-right ── */
+    #shairo-wrap{position:fixed;bottom:1.75rem;right:1.75rem;z-index:60;cursor:pointer;}
+    #shairo-tooltip{position:absolute;bottom:calc(100% + 12px);right:0;width:240px;background:#061126;border:1.5px solid #FB7185;border-radius:1rem;padding:1rem;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .3s,transform .3s;box-shadow:0 8px 32px rgba(0,0,0,.5);}
+    #shairo-wrap:hover #shairo-tooltip,#shairo-wrap.active #shairo-tooltip{opacity:1;pointer-events:all;transform:translateY(0);}
+    #shairo-tooltip::after{content:'';position:absolute;bottom:-10px;right:24px;border:5px solid transparent;border-top-color:#FB7185;}
+    /* On small screens, keep tooltip on right but cap width */
+    @media(max-width:360px){
+      #shairo-tooltip{right:-10px;width:210px;}
+    }
+
+    /* ── Badge pill ── */
+    .pill{display:inline-flex;align-items:center;gap:.4rem;background:rgba(251,113,133,.12);border:1px solid rgba(251,113,133,.35);color:#FB7185;border-radius:999px;padding:.3rem .9rem;font-size:.75rem;font-weight:700;letter-spacing:.05em;}
+
+    /* ── Form inputs ── */
+    .form-input{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:.75rem;padding:.875rem 1rem;color:white;font-size:.9rem;transition:.2s;outline:none;}
+    .form-input::placeholder{color:rgba(255,255,255,.35);}
+    .form-input:focus{border-color:#FB7185;background:rgba(251,113,133,.07);}
+
+    /* ── Skill bar ── */
+    .skill-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);}
+    .skill-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#1E40AF,#FB7185);}
+
+    /* ── Counter animation ── */
+    @keyframes countUp{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+    .count-in{animation:countUp .6s ease forwards;}
+
+    /* ── Pulse ring ── */
+    @keyframes ring{0%{box-shadow:0 0 0 0 rgba(250,204,21,.5)}70%{box-shadow:0 0 0 14px rgba(250,204,21,0)}100%{box-shadow:0 0 0 0 rgba(250,204,21,0)}}
+    .pulse-ring{animation:ring 2s infinite;}
+
+    /* ── WA float ── */
+    @keyframes waPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 12px rgba(37,211,102,0)}}
+    #wa-float{animation:waPulse 2.2s infinite;}
+
+    /* ── Gradient border card ── */
+    .gb-card{background:linear-gradient(#0B1F3A,#0B1F3A) padding-box,linear-gradient(135deg,#FACC15,#FB7185) border-box;border:2px solid transparent;border-radius:1.25rem;}
+
+    /* ── Marquee ── */
+    .marquee-track{display:flex;gap:2rem;will-change:transform;}
+    .marquee-outer{overflow:hidden;}
+
+    /* ── Step connector ── */
+    .step-connector{flex:1;height:2px;background:linear-gradient(90deg,#FACC15,#FB7185);margin:0 .5rem;}
+  </style>
+</head>
+<body class="text-white">
+
+<!-- ════════════════════════════════════
+     NAVBAR
+════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50" style="background:rgba(11,31,58,.92);backdrop-filter:blur(16px);">
+  <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-16 relative">
+    <!-- Logo -->
+    <a href="https://sidep.edu.co/" class="flex items-center gap-2 group flex-shrink-0">
+      <img src="https://sidep.edu.co/assets/SIDEP_logo1.webp" alt="Logo SIDEP" class="h-10 w-auto group-hover:opacity-90 transition"/>
+    </a>
+
+    <!-- Desktop centered links -->
+    <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6">
+      <a href="https://sidep.edu.co/" class="flex items-center gap-1.5 text-white/70 hover:text-accent font-semibold text-sm transition">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Inicio
+      </a>
+      <span class="text-white/15">|</span>
+      <a href="https://sidep.edu.co/#programas" class="text-white/70 hover:text-accent font-semibold text-sm transition">Programas</a>
+    </div>
+
+    <!-- Right: CTA + hamburger -->
+    <div class="flex items-center gap-3">
+      <a href="#hero-form"
+         class="pulse-ring bg-accent text-dark font-black px-5 py-2.5 rounded-xl hover:bg-[#EAB308] transition text-sm shadow-lg">
+        Solicita información
+      </a>
+      <!-- Hamburger — mobile only -->
+      <button id="mob-btn" onclick="toggleMobileMenu()" class="md:hidden text-white p-1.5 rounded-lg hover:bg-white/10 transition" aria-label="Menú">
+        <svg id="ham-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div id="mob-menu" class="hidden border-t border-white/10" style="background:rgba(11,31,58,.98);">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
+      <a href="https://sidep.edu.co/" onclick="toggleMobileMenu()"
+         class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/8 text-white/80 hover:text-accent font-semibold text-sm transition">
+        <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Inicio
+      </a>
+      <a href="https://sidep.edu.co/#programas" onclick="toggleMobileMenu()"
+         class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/8 text-white/80 hover:text-accent font-semibold text-sm transition">
+        <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        Programas
+      </a>
+      <div class="pt-1 pb-2">
+        <a href="#hero-form" onclick="toggleMobileMenu()"
+           class="block w-full text-center bg-accent text-dark font-black px-5 py-3 rounded-xl hover:bg-[#EAB308] transition text-sm shadow-lg">
+          Solicita información
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ════════════════════════════════════
+     HERO
+════════════════════════════════════ -->
+<section id="hero" class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+  <!-- Blobs -->
+  <div class="blob w-[500px] h-[500px] bg-cyan top-0 left-0"></div>
+  <div class="blob w-[400px] h-[400px] bg-accent top-1/2 right-0"></div>
+
+  <div class="max-w-6xl mx-auto px-4 w-full py-16 grid lg:grid-cols-2 gap-12 items-center">
+
+    <!-- Left: copy -->
+    <div class="reveal">
+      <div class="mb-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-black text-sm tracking-wide" style="background:linear-gradient(135deg,#1E40AF,#FB7185);color:white;box-shadow:0 4px 20px rgba(30,64,175,.45);">🌍 Centro de Idiomas</div>
+      <h1 class="text-4xl md:text-5xl font-black leading-tight mb-6">
+        Comunícate con el mundo y convierte nuevos idiomas en<br/>
+        <span class="grad-text">oportunidades sin fronteras</span>
+      </h1>
+      <p class="text-white/70 text-lg font-medium mb-8 leading-relaxed max-w-lg">
+        SIDEP ofrece formación en idiomas para estudiantes, profesionales, empresas e instituciones que quieren comunicarse con confianza en contextos académicos, laborales y cotidianos.
+      </p>
+
+      <!-- Mini trust bar -->
+      <div class="flex flex-wrap gap-4 mb-10">
+        <div class="flex items-center gap-2 text-sm font-semibold text-white/80">
+          <span class="text-accent text-lg">✓</span> Metodología comunicativa
+        </div>
+        <div class="flex items-center gap-2 text-sm font-semibold text-white/80">
+          <span class="text-accent text-lg">✓</span> Docentes especializados
+        </div>
+        <div class="flex items-center gap-2 text-sm font-semibold text-white/80">
+          <span class="text-accent text-lg">✓</span> Horarios flexibles
+        </div>
+        <div class="flex items-center gap-2 text-sm font-semibold text-white/80">
+          <span class="text-accent text-lg">🗣️</span> Aprendizaje práctico
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="glass p-4 text-center">
+          <p class="text-2xl font-black text-accent">Inglés</p>
+          <p class="text-xs text-white/60 font-semibold mt-1">Idioma principal</p>
+        </div>
+        <div class="glass p-4 text-center">
+          <p class="text-2xl font-black text-cyan">Flexible</p>
+          <p class="text-xs text-white/60 font-semibold mt-1">Modalidad</p>
+        </div>
+        <div class="glass p-4 text-center">
+          <p class="text-2xl font-black text-white">Práctico</p>
+          <p class="text-xs text-white/60 font-semibold mt-1">Enfoque</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: form -->
+    <div id="hero-form" class="gb-card p-8 reveal" style="transition-delay:.2s">
+      <p class="text-accent font-black text-xs uppercase tracking-widest mb-1">Oferta de idiomas</p>
+      <h2 class="text-2xl font-black mb-2">Solicita información gratis</h2>
+      <p class="text-white/50 text-sm font-medium mb-6">Un asesor te ayudará a identificar tu nivel y elegir la ruta de idiomas que mejor se ajuste a tus objetivos.</p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">Nombre completo</label>
+          <input type="text" placeholder="Ej: María Gómez" class="form-input"/>
+        </div>
+        <div>
+          <label class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">WhatsApp</label>
+          <input type="tel" placeholder="+57 300 000 0000" class="form-input"/>
+        </div>
+        <div>
+          <label class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">Correo electrónico</label>
+          <input type="email" placeholder="tucorreo@gmail.com" class="form-input"/>
+        </div>
+        <div>
+          <label class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">Servicio de interés</label>
+          <div class="form-input text-white/60 cursor-not-allowed select-none flex items-center gap-2">
+            <span class="text-accent">🌐</span> Centro de Idiomas
+          </div>
+        </div>
+        <button onclick="submitForm()"
+          class="w-full bg-accent text-dark font-black py-4 rounded-xl hover:bg-[#FDE047] transition text-base shadow-xl mt-2">
+          💬 Quiero aprender un idioma
+        </button>
+        <p class="text-white/30 text-xs text-center">Al enviar, autorizas el contacto de un asesor por WhatsApp</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     MARQUEE — skills
+════════════════════════════════════ -->
+<div class="py-4 overflow-hidden border-y border-white/5 bg-darker marquee-outer" id="marquee-outer">
+  <div class="marquee-track whitespace-nowrap text-sm font-bold text-white/30 uppercase tracking-widest">
+    <span>Inglés Comunicativo</span><span class="text-accent mx-6">★</span>
+    <span>Inglés Empresarial</span><span class="text-accent mx-6">★</span>
+    <span>Club de Conversación</span><span class="text-accent mx-6">★</span>
+    <span>Preparación para Exámenes</span><span class="text-accent mx-6">★</span>
+    <span>Español para Extranjeros</span><span class="text-accent mx-6">★</span>
+    <span>Idiomas para Empresas</span><span class="text-accent mx-6">★</span>
+    <span>Cultura e Interculturalidad</span><span class="text-accent mx-6">★</span>
+    <span>Formación Bilingüe</span><span class="text-accent mx-6">★</span>
+    <!-- duplicate for seamless loop -->
+    <span>Inglés Comunicativo</span><span class="text-accent mx-6">★</span>
+    <span>Inglés Empresarial</span><span class="text-accent mx-6">★</span>
+    <span>Club de Conversación</span><span class="text-accent mx-6">★</span>
+    <span>Preparación para Exámenes</span><span class="text-accent mx-6">★</span>
+    <span>Español para Extranjeros</span><span class="text-accent mx-6">★</span>
+    <span>Idiomas para Empresas</span><span class="text-accent mx-6">★</span>
+    <span>Cultura e Interculturalidad</span><span class="text-accent mx-6">★</span>
+    <span>Formación Bilingüe</span><span class="text-accent mx-6">★</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     ¿POR QUÉ APRENDER IDIOMAS EN SIDEP?
+════════════════════════════════════ -->
+<section class="py-24 relative overflow-hidden">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid lg:grid-cols-2 gap-14 items-center">
+
+      <div class="reveal">
+        <div class="pill mb-5">💡 ¿Por qué aprender con SIDEP?</div>
+        <h2 class="text-4xl font-black mb-6 aline leading-tight">
+          Idiomas para comunicarte<br/>con confianza
+        </h2>
+        <p class="text-white/60 font-medium mb-8 leading-relaxed">
+          Aprendes mediante situaciones reales, práctica constante y acompañamiento docente para usar el idioma en tu vida, tus estudios y tu trabajo.
+        </p>
+
+        <div class="space-y-5">
+          <div>
+            <div class="flex justify-between mb-1.5 text-sm font-bold">
+              <span class="text-white">🗣️ Expresión oral</span>
+              <span class="text-accent">95%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1.5 text-sm font-bold">
+              <span class="text-white">🎧 Comprensión auditiva</span>
+              <span class="text-accent">90%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1.5 text-sm font-bold">
+              <span class="text-white">📖 Lectura y escritura</span>
+              <span class="text-accent">88%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1.5 text-sm font-bold">
+              <span class="text-white">🌟 Confianza comunicativa</span>
+              <span class="text-accent">92%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" style="width:92%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative reveal" style="transition-delay:.15s">
+        <img src="https://sidep.edu.co/assets/En_clase_sidep.webp"
+             alt="Estudiantes aprendiendo idiomas en SIDEP"
+             class="rounded-2xl w-full h-80 object-cover shadow-2xl"/>
+        <!-- Floating badge -->
+        <div class="absolute -bottom-5 -left-5 bg-accent text-dark rounded-2xl p-4 shadow-2xl font-black text-center">
+          <p class="text-2xl">+Confianza</p>
+          <p class="text-xs font-bold">al comunicarte</p>
+        </div>
+        <div class="absolute -top-5 -right-5 glass rounded-2xl p-4 text-center border border-cyan/40">
+          <p class="text-2xl font-black text-cyan">Aprendizaje</p>
+          <p class="text-xs text-white/60 font-semibold">práctico</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     PROCESO / TIMELINE
+════════════════════════════════════ -->
+<section class="py-24 bg-darker relative overflow-hidden">
+  <div class="blob w-96 h-96 bg-primary top-0 right-0 opacity-10"></div>
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="text-center mb-16 reveal">
+      <div class="pill mx-auto mb-5">🗺️ Tu ruta de aprendizaje</div>
+      <h2 class="text-4xl font-black aline-c">Comprende, practica y comunícate</h2>
+      <p class="text-white/50 mt-5 font-medium max-w-lg mx-auto">Tres etapas para avanzar desde tu nivel actual hasta comunicarte con mayor seguridad.</p>
+    </div>
+
+    <!-- Steps desktop -->
+    <div class="hidden md:flex items-start gap-0">
+
+      <!-- Step 1 -->
+      <div class="flex-1 text-center reveal">
+        <div class="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center text-3xl mx-auto mb-5 shadow-xl shadow-accent/20">🧭</div>
+        <div class="inline-block bg-accent text-dark text-xs font-black px-3 py-1 rounded-full mb-3">ETAPA 1</div>
+        <h3 class="text-white font-black text-lg mb-2">Conoce tu nivel</h3>
+        <p class="text-white/50 text-sm font-medium leading-relaxed px-2">Identifica tu punto de partida y define para qué quieres aprender el idioma.</p>
+      </div>
+
+      <div class="step-connector mt-8"></div>
+
+      <!-- Step 2 -->
+      <div class="flex-1 text-center reveal" style="transition-delay:.15s">
+        <div class="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-3xl mx-auto mb-5 shadow-xl shadow-primary/30 border-2 border-cyan">🗣️</div>
+        <div class="inline-block bg-primary text-white text-xs font-black px-3 py-1 rounded-full mb-3">ETAPA 2</div>
+        <h3 class="text-white font-black text-lg mb-2">Aprende en contexto</h3>
+        <p class="text-white/50 text-sm font-medium leading-relaxed px-2">Integra vocabulario, gramática y pronunciación en actividades cercanas a la vida real.</p>
+        <div class="mt-3 text-cyan font-black text-sm">💬 Práctica constante</div>
+      </div>
+
+      <div class="step-connector mt-8"></div>
+
+      <!-- Step 3 -->
+      <div class="flex-1 text-center reveal" style="transition-delay:.3s">
+        <div class="w-16 h-16 rounded-2xl bg-cyan flex items-center justify-center text-3xl mx-auto mb-5 shadow-xl shadow-cyan/20">🌎</div>
+        <div class="inline-block bg-cyan text-dark text-xs font-black px-3 py-1 rounded-full mb-3">ETAPA 3</div>
+        <h3 class="text-white font-black text-lg mb-2">Usa el idioma</h3>
+        <p class="text-white/50 text-sm font-medium leading-relaxed px-2">Participa en conversaciones y proyectos que demuestran tu progreso comunicativo.</p>
+        <div class="mt-3 text-cyan font-black text-sm">🌍 Comunicación real</div>
+      </div>
+    </div>
+
+    <!-- Steps mobile -->
+    <div class="md:hidden space-y-6">
+      <div class="glass p-6 flex gap-5 items-start reveal">
+        <div class="w-14 h-14 rounded-xl bg-accent flex items-center justify-center text-2xl flex-shrink-0">🧭</div>
+        <div>
+          <span class="pill mb-2 inline-flex">ETAPA 1</span>
+          <h3 class="font-black text-white text-lg">Conoce tu nivel</h3>
+          <p class="text-white/50 text-sm font-medium mt-1">Identifica tu punto de partida y tu objetivo con el idioma.</p>
+        </div>
+      </div>
+      <div class="glass p-6 flex gap-5 items-start reveal">
+        <div class="w-14 h-14 rounded-xl bg-primary border-2 border-cyan flex items-center justify-center text-2xl flex-shrink-0">🗣️</div>
+        <div>
+          <span class="pill mb-2 inline-flex">ETAPA 2</span>
+          <h3 class="font-black text-white text-lg">Aprende en contexto</h3>
+          <p class="text-white/50 text-sm font-medium mt-1">Practica vocabulario, pronunciación y estructuras en situaciones reales.</p>
+        </div>
+      </div>
+      <div class="glass p-6 flex gap-5 items-start reveal">
+        <div class="w-14 h-14 rounded-xl bg-cyan flex items-center justify-center text-2xl flex-shrink-0">🌎</div>
+        <div>
+          <span class="pill mb-2 inline-flex">ETAPA 3</span>
+          <h3 class="font-black text-white text-lg">Usa el idioma</h3>
+          <p class="text-white/50 text-sm font-medium mt-1">Comunícate con confianza y demuestra tu progreso.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     MODALIDADES FLEXIBLES
+════════════════════════════════════ -->
+<section class="py-24 relative overflow-hidden">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="gb-card p-10 md:p-14 text-center reveal">
+      <div class="text-6xl mb-5">🌐</div>
+      <h2 class="text-4xl md:text-5xl font-black mb-4 leading-tight">
+        ¿Cómo se adapta a tu ritmo?<br/>
+        <span class="grad-text">Aprende desde donde estés.</span>
+      </h2>
+      <p class="text-white/60 font-medium text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+        Elige una modalidad compatible con tu ritmo. Las rutas pueden adaptarse a estudiantes, profesionales, equipos de trabajo e instituciones.
+      </p>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="glass p-6 text-center">
+          <div class="text-4xl mb-3">🏛️</div>
+          <h3 class="font-black text-white text-lg mb-2">Presencial</h3>
+          <p class="text-white/50 text-sm font-medium">Conversación guiada y práctica directa con docentes y compañeros.</p>
+        </div>
+        <div class="glass p-6 text-center border border-accent/30">
+          <div class="text-4xl mb-3">🌐</div>
+          <h3 class="font-black text-accent text-lg mb-2">Virtual</h3>
+          <p class="text-white/50 text-sm font-medium">Clases en vivo y recursos digitales para practicar desde cualquier lugar.</p>
+        </div>
+        <div class="glass p-6 text-center">
+          <div class="text-4xl mb-3">🔀</div>
+          <h3 class="font-black text-white text-lg mb-2">Híbrida</h3>
+          <p class="text-white/50 text-sm font-medium">Combina práctica presencial y virtual según la ruta seleccionada.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     RUTAS DE IDIOMAS
+════════════════════════════════════ -->
+<section class="py-24 bg-darker relative">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="text-center mb-14 reveal">
+      <div class="pill mx-auto mb-5">📋 Rutas de idiomas</div>
+      <h2 class="text-4xl font-black aline-c">Opciones para cada objetivo</h2>
+      <p class="text-white/50 mt-5 font-medium max-w-xl mx-auto">Cursos y experiencias para comunicarte mejor en la vida, el estudio y el trabajo.</p>
+    </div>
+    <!-- Nota al pie — versión compacta -->
+    <div class="text-center reveal mb-6">
+      <p class="text-white/50 text-[11px] font-medium">
+        <span class="text-white/70 font-semibold">Nota:</span>
+        La disponibilidad de idiomas, niveles, horarios y modalidades puede variar según la programación vigente.
+      </p>
+    </div>
+    <div class="space-y-4 reveal">
+
+      <!-- Ruta 1 -->
+      <div class="glass overflow-hidden">
+        <button class="accordion-btn w-full flex items-center justify-between p-6 text-left" onclick="toggleAccordion(this)">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-accent flex items-center justify-center font-black text-dark">1</div>
+            <div>
+              <p class="font-black text-white text-lg">Inglés para la vida y el trabajo</p>
+              <p class="text-white/40 text-sm font-medium">Comunicación práctica para contextos personales, académicos y laborales</p>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="px-6 pb-6 grid sm:grid-cols-2 gap-3">
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
+              <span class="text-accent mt-0.5">🗣️</span>
+              <div><p class="text-white font-bold text-sm">Inglés comunicativo</p><p class="text-white/40 text-xs">Comunicación cotidiana</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
+              <span class="text-accent mt-0.5">💼</span>
+              <div><p class="text-white font-bold text-sm">Inglés empresarial</p><p class="text-white/40 text-xs">Contextos profesionales</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-cyan/10 border border-cyan/40 relative">
+              <span class="text-cyan mt-0.5">🧳</span>
+              <div><p class="text-white font-bold text-sm">Inglés para turismo y servicio</p><span class="inline-flex items-center gap-1 bg-cyan/20 text-cyan text-[10px] font-black px-1.5 py-0.5 rounded-full mb-0.5 mr-1">💬 PRÁCTICA</span><p class="text-cyan text-xs font-semibold mt-0.5">Atención y experiencias</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-cyan/10 border border-cyan/40 relative">
+              <span class="text-cyan mt-0.5">🎓</span>
+              <div><p class="text-white font-bold text-sm">Preparación para certificaciones</p><span class="inline-flex items-center gap-1 bg-cyan/20 text-cyan text-[10px] font-black px-1.5 py-0.5 rounded-full mb-0.5 mr-1">🎯 ESPECIALIZADA</span><p class="text-cyan text-xs font-semibold mt-0.5">Objetivos académicos</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
+              <span class="text-accent mt-0.5">💬</span>
+              <div><p class="text-white font-bold text-sm">Club de conversación</p><p class="text-white/40 text-xs">Fluidez y confianza</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-cyan/10 border border-cyan/40 relative">
+              <span class="text-cyan mt-0.5">🎧</span>
+              <div><p class="text-white font-bold text-sm">Pronunciación y escucha</p><span class="inline-flex items-center gap-1 bg-cyan/20 text-cyan text-[10px] font-black px-1.5 py-0.5 rounded-full mb-0.5 mr-1">💬 PRÁCTICA</span><p class="text-cyan text-xs font-semibold mt-0.5">Comprensión oral</p></div>
+            </div>
+            <div class="flex items-start gap-3 glass p-3 border border-cyan/20 sm:col-span-2">
+              <span class="text-cyan mt-0.5">✍️</span>
+              <div><p class="text-white font-bold text-sm">Escritura académica y profesional</p><span class="inline-flex items-center gap-1 bg-cyan/20 text-cyan text-[10px] font-black px-1.5 py-0.5 rounded-full mb-0.5 mr-1">🎯 ESPECIALIZADA</span><p class="text-cyan text-xs font-semibold mt-0.5">Comunicación escrita</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ruta 2 -->
+      <div class="glass overflow-hidden">
+        <button class="accordion-btn w-full flex items-center justify-between p-6 text-left" onclick="toggleAccordion(this)">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center font-black text-white border-2 border-cyan">2</div>
+            <div>
+              <p class="font-black text-white text-lg">Programas institucionales y otros idiomas</p>
+              <p class="text-white/40 text-sm font-medium">Soluciones para colegios, empresas y comunidades</p>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="px-6 pb-6 grid sm:grid-cols-2 gap-3">
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
+              <span class="text-accent mt-0.5">🇨🇴</span>
+              <div><p class="text-white font-bold text-sm">Español para extranjeros</p><p class="text-white/40 text-xs">Lengua y cultura</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
+              <span class="text-accent mt-0.5">🏫</span>
+              <div><p class="text-white font-bold text-sm">Proyectos de bilingüismo</p><p class="text-white/40 text-xs">Instituciones educativas</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
+              <span class="text-accent mt-0.5">🏢</span>
+              <div><p class="text-white font-bold text-sm">Formación para empresas</p><p class="text-white/40 text-xs">Equipos de trabajo</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-cyan/10 border border-cyan/40 relative">
+              <span class="text-cyan mt-0.5">👩‍🏫</span>
+              <div><p class="text-white font-bold text-sm">Acompañamiento a docentes</p><span class="inline-flex items-center gap-1 bg-cyan/20 text-cyan text-[10px] font-black px-1.5 py-0.5 rounded-full mb-0.5 mr-1">🎯 ESPECIALIZADA</span><p class="text-cyan text-xs font-semibold mt-0.5">Fortalecimiento pedagógico</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
+              <span class="text-accent mt-0.5">🗨️</span>
+              <div><p class="text-white font-bold text-sm">Clubes de conversación</p><p class="text-white/40 text-xs">Práctica para grupos</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-cyan/10 border border-cyan/40 relative">
+              <span class="text-cyan mt-0.5">🌏</span>
+              <div><p class="text-white font-bold text-sm">Talleres interculturales</p><span class="inline-flex items-center gap-1 bg-cyan/20 text-cyan text-[10px] font-black px-1.5 py-0.5 rounded-full mb-0.5 mr-1">💬 PRÁCTICA</span><p class="text-cyan text-xs font-semibold mt-0.5">Cultura y comunicación</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
+              <span class="text-accent mt-0.5">🧩</span>
+              <div><p class="text-white font-bold text-sm">Rutas personalizadas</p><p class="text-white/40 text-xs">Objetivos específicos</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
+              <span class="text-accent mt-0.5">📋</span>
+              <div><p class="text-white font-bold text-sm">Evaluación de nivel</p><p class="text-white/40 text-xs">Diagnóstico inicial</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ruta 3 -->
+      <div class="glass overflow-hidden border border-cyan/30">
+        <div class="p-6 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-cyan flex items-center justify-center font-black text-dark">3</div>
+          <div>
+            <p class="font-black text-white text-lg">Rutas a la medida</p>
+            <p class="text-cyan text-sm font-semibold">🎯 Formación para personas, equipos e instituciones</p>
+          </div>
+          <div class="ml-auto glass px-4 py-2 text-center">
+            <p class="text-xl font-black text-accent">Flexible</p>
+            <p class="text-xs text-white/40 font-semibold">ruta de idiomas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legend improved -->
+    <div class="mt-8 flex gap-4 flex-wrap justify-center">
+      <div class="flex items-center gap-2.5 px-4 py-2 rounded-full border border-cyan/40 bg-cyan/10">
+        <span class="text-cyan text-base">💬</span>
+        <span class="text-cyan text-xs font-black">Práctica Comunicativa</span>
+        <span class="text-white/40 text-xs font-medium">— uso real del idioma</span>
+      </div>
+      <div class="flex items-center gap-2.5 px-4 py-2 rounded-full border border-accent/30 bg-accent/10">
+        <span class="text-accent text-base">🎯</span>
+        <span class="text-accent text-xs font-black">Ruta Especializada</span>
+        <span class="text-white/40 text-xs font-medium">— objetivos específicos</span>
+      </div>
+    </div>
+
+    <!-- PDF Download -->
+    <div class="mt-10 flex justify-center reveal">
+      <a href="#hero-form"
+         class="group flex items-center gap-4 gb-card px-7 py-5 hover:scale-105 transition-transform shadow-2xl">
+        <!-- PDF icon -->
+        <div class="w-12 h-12 rounded-xl bg-red-500/20 border border-red-400/40 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/30 transition">
+          <svg class="w-6 h-6 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8.5 15.5h-1v-4h1.4c.9 0 1.6.7 1.6 1.6v.8c0 .9-.7 1.6-1.6 1.6H8.5zm.4-3.2h-.4v2.4h.4c.4 0 .7-.3.7-.7v-.9c0-.5-.3-.8-.7-.8zm2.6 3.2v-4h2.5v.8h-1.6v.8h1.4v.8h-1.4v.8h1.6v.8H11.5zm4.1 0l-1.2-4h1l.8 2.8.8-2.8h1l-1.2 4h-1.2z"/>
+          </svg>
+        </div>
+        <!-- Text -->
+        <div class="text-left">
+          <p class="text-white font-black text-base group-hover:text-accent transition">Solicitar propuesta de idiomas</p>
+          <p class="text-white/40 text-xs font-medium mt-0.5">Te ayudamos a elegir nivel, modalidad y ruta</p>
+        </div>
+        <!-- Arrow -->
+        <div class="ml-2 w-9 h-9 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center flex-shrink-0 group-hover:bg-accent group-hover:border-accent transition">
+          <svg class="w-4 h-4 text-accent group-hover:text-dark transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     PROGRESO COMUNICATIVO
+════════════════════════════════════ -->
+<section class="py-24 relative overflow-hidden">
+  <div class="blob w-[500px] h-[500px] bg-cyan left-0 top-0 opacity-10"></div>
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+      <div class="relative reveal">
+        <img src="https://sidep.edu.co/assets/slide2.webp"
+             alt="Personas aprendiendo idiomas con SIDEP"
+             class="rounded-2xl w-full h-80 object-cover shadow-2xl"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent rounded-2xl"></div>
+        <div class="absolute bottom-5 left-5 right-5">
+          <div class="glass p-4 border border-accent/40">
+            <p class="text-accent font-black text-sm">🌍 Comunicación sin fronteras</p>
+            <p class="text-white/70 text-xs font-medium mt-1">Cada nivel te acerca a nuevas conversaciones, culturas y oportunidades.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal" style="transition-delay:.15s">
+        <div class="pill mb-5">🚀 Progreso Comunicativo</div>
+        <h2 class="text-4xl font-black mb-5 aline leading-tight">
+          Un idioma que crece<br/>contigo
+        </h2>
+        <p class="text-white/60 font-medium mb-8 leading-relaxed">
+          Avanza por niveles mediante una ruta progresiva. Fortalece comprensión, expresión y confianza hasta usar el idioma con autonomía en contextos <strong class="text-accent">reales</strong>.
+        </p>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4 glass p-4">
+            <div class="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center text-xl flex-shrink-0">1️⃣</div>
+            <p class="text-white font-semibold text-sm">Descubre tu nivel y define tu objetivo</p>
+          </div>
+          <div class="flex items-center gap-4 glass p-4">
+            <div class="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center text-xl flex-shrink-0">2️⃣</div>
+            <p class="text-white font-semibold text-sm">Practica comprensión y expresión en cada nivel</p>
+          </div>
+          <div class="flex items-center gap-4 glass p-4 border border-cyan/30">
+            <div class="w-10 h-10 rounded-xl bg-cyan/20 flex items-center justify-center text-xl flex-shrink-0">3️⃣</div>
+            <p class="text-white font-semibold text-sm">Usa el idioma con confianza y continúa <span class="text-cyan font-black">avanzando</span></p>
+          </div>
+        </div>
+        <a href="#hero-form" class="mt-8 inline-block bg-accent text-dark font-black px-8 py-3.5 rounded-xl hover:bg-[#FDE047] transition shadow-xl text-sm">
+          Quiero comenzar mi ruta →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     HABILIDADES SIDEP
+════════════════════════════════════ -->
+<section class="py-24 bg-darker relative overflow-hidden">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-14 reveal">
+      <div class="pill mx-auto mb-5">🧠 Habilidades para comunicarte</div>
+      <h2 class="text-4xl font-black aline-c leading-tight">
+        ¿Qué fortalece el<br/>aprendizaje de idiomas?
+      </h2>
+      <p class="text-white/50 mt-5 font-medium max-w-2xl mx-auto">Integra habilidades comunicativas, interculturales y profesionales para desenvolverte en distintos entornos.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 mb-12">
+      <div class="glass p-8 text-center reveal">
+        <div class="text-5xl mb-4">🗣️</div>
+        <h3 class="text-white font-black text-xl mb-3">Comunicativas</h3>
+        <p class="text-white/50 font-medium text-sm leading-relaxed">Hablar, escuchar, leer y escribir con mayor claridad, fluidez y seguridad.</p>
+      </div>
+      <div class="glass p-8 text-center reveal border border-accent/20" style="transition-delay:.1s">
+        <div class="text-5xl mb-4">🌎</div>
+        <h3 class="text-accent font-black text-xl mb-3">Interculturales</h3>
+        <p class="text-white/50 font-medium text-sm leading-relaxed">Comprender otras culturas y relacionarte con respeto en contextos diversos.</p>
+      </div>
+      <div class="glass p-8 text-center reveal" style="transition-delay:.2s">
+        <div class="text-5xl mb-4">💼</div>
+        <h3 class="text-white font-black text-xl mb-3">Profesionales</h3>
+        <p class="text-white/50 font-medium text-sm leading-relaxed">Usar el idioma en estudios, reuniones, servicio al cliente y oportunidades laborales.</p>
+      </div>
+    </div>
+
+    <div class="gb-card p-6 text-center reveal">
+      <p class="text-white/60 font-medium">Y todo con la metodología de</p>
+      <p class="text-xl font-black text-white mt-1">la institución educativa más avanzada en <span class="text-cyan">tecnología y virtualidad</span> en Colombia <span class="inline-flex items-center ml-1" style="vertical-align:middle;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" width="28" height="19" style="border-radius:3px;display:inline-block;box-shadow:0 1px 4px rgba(0,0,0,.4);"><rect width="3" height="2" fill="#CE1126"/><rect width="3" height="1.5" fill="#003893"/><rect width="3" height="1" fill="#FCD116"/></svg></span></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     REQUISITOS
+════════════════════════════════════ -->
+<section class="py-24 relative">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="text-center mb-14 reveal">
+      <div class="pill mx-auto mb-5">📄 Inscripción</div>
+      <h2 class="text-4xl font-black aline-c">¿Cómo comenzar tu ruta de idiomas?</h2>
+      <p class="text-white/50 mt-5 font-medium">Un proceso sencillo para conocer tu nivel, elegir la ruta e iniciar.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-5 reveal">
+      <div class="glass p-6 flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-accent/15 flex items-center justify-center text-2xl flex-shrink-0">👤</div>
+        <div>
+          <h3 class="font-black text-white mb-1">Datos de contacto</h3>
+          <p class="text-white/50 text-sm font-medium">Tu nombre, teléfono, correo y ciudad para brindarte orientación.</p>
+        </div>
+      </div>
+      <div class="glass p-6 flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-accent/15 flex items-center justify-center text-2xl flex-shrink-0">🪪</div>
+        <div>
+          <h3 class="font-black text-white mb-1">Idioma y objetivo</h3>
+          <ul class="text-white/50 text-sm font-medium list-disc ml-4 space-y-1">
+            <li>Idioma o habilidad que quieres fortalecer.</li>
+            <li>Modalidad y horario de preferencia.</li>
+            <li>Objetivo personal, profesional o de equipo.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="glass p-6 flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-cyan/15 flex items-center justify-center text-2xl flex-shrink-0">📧</div>
+        <div>
+          <h3 class="font-black text-white mb-1">Diagnóstico y orientación</h3>
+          <p class="text-white/50 text-sm font-medium">Recibe orientación sobre nivel, cursos, horarios, modalidades y proceso de inscripción.</p>
+        </div>
+      </div>
+      <div class="glass p-6 flex items-start gap-4 border border-accent/30">
+        <div class="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center text-2xl flex-shrink-0">✅</div>
+        <div>
+          <h3 class="font-black text-accent mb-1">¡Eso es todo!</h3>
+          <p class="text-white/50 text-sm font-medium">Elige la ruta adecuada, completa tu inscripción y comienza a comunicarte.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-10 reveal">
+      <a href="#hero-form"
+         class="inline-block bg-accent text-dark font-black px-10 py-4 rounded-xl hover:bg-[#FDE047] transition shadow-2xl text-base pulse-ring">
+        🌍 Conocer la oferta
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     CTA FINAL
+════════════════════════════════════ -->
+<section class="py-24 relative overflow-hidden">
+  <div class="blob w-[600px] h-[600px] bg-accent opacity-5 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 absolute"></div>
+  <div class="max-w-3xl mx-auto px-4 text-center relative z-10 reveal">
+    <div class="text-7xl mb-6">🗣️</div>
+    <h2 class="text-4xl md:text-5xl font-black mb-5 leading-tight">
+      Habla con confianza y abre<br/><span class="grad-text">nuevas oportunidades</span>
+    </h2>
+    <p class="text-white/60 font-medium text-lg mb-10 max-w-xl mx-auto">Aprende un idioma con una experiencia flexible, práctica y conectada con tus objetivos personales, académicos o laborales.</p>
+    <a href="https://wa.me/573026291451?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20Centro%20de%20Idiomas%20de%20SIDEP" target="_blank"
+       class="inline-flex items-center gap-3 bg-green-500 hover:bg-green-400 text-white font-black px-10 py-5 rounded-2xl text-xl transition shadow-2xl">
+      <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Hablar con un asesor
+    </a>
+  </div>
+</section>
+
+
+
+
+
+<!-- ════════════════════════════════════
+     FOOTER
+════════════════════════════════════ -->
+<footer class="bg-darker border-t border-white/5 py-10">
+  <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <a href="https://sidep.edu.co/" class="hover:opacity-80 transition">
+        <img src="https://sidep.edu.co/assets/SIDEP_logo1.webp" alt="Logo SIDEP" class="h-10 w-auto"/>
+      </a>
+      <span class="text-white/30 text-sm font-medium">Centro de Idiomas</span>
+    </div>
+    <div class="text-white/30 text-xs font-medium text-center">
+      © 2026 Instituto SIDEP · Avalado por la Secretaría de Educación de Bogotá<br/>
+         <br/>
+    </div>
+    <a href="https://wa.me/573026291451?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20Centro%20de%20Idiomas%20de%20SIDEP" target="_blank" class="text-green-400 hover:text-green-300 font-bold text-sm flex items-center gap-2 transition">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      +57 302 6291451
+    </a>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════
+     SHAIRO — DESKTOP FIXED
+════════════════════════════════════ -->
+<div id="shairo-wrap" onclick="this.classList.toggle('active')">
+  <div id="shairo-tooltip">
+    <p class="text-accent font-black text-sm mb-1">¡Hola! Soy Shairo 🐾</p>
+    <p class="text-white/70 text-xs font-medium leading-relaxed mb-3">Te ayudo a encontrar el idioma, nivel y modalidad que mejor se ajusten a tus objetivos. ¿Hablamos?</p>
+    <a href="https://wa.me/573026291451?text=Hola%20Shairo%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20Centro%20de%20Idiomas%20de%20SIDEP" target="_blank"
+       class="flex items-center justify-center gap-2 bg-green-500 text-white font-black px-4 py-2.5 rounded-xl text-sm hover:bg-green-400 transition">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      ¡Hablemos por WhatsApp!
+    </a>
+  </div>
+  <img src="https://sidep.edu.co/assets/SHAIRO.webp"
+       alt="Shairo mascota SIDEP"
+       class="w-16 h-16 rounded-full object-cover border-3 border-accent shadow-2xl hover:scale-110 transition-transform"/>
+</div>
+
+
+<!-- WA float -->
+<a id="wa-float" href="https://wa.me/573026291451?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20Centro%20de%20Idiomas%20de%20SIDEP" target="_blank"
+   class="fixed bottom-6 left-6 z-50 bg-green-500 text-white w-13 h-13 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform w-14 h-14">
+  <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+
+<!-- ════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════ -->
+<script>
+  // ══════════════════════════════════════
+  // MARQUEE — constant pixel/s speed on all screens
+  // ══════════════════════════════════════
+  (function() {
+    const track = document.querySelector('.marquee-track');
+    if (!track) return;
+    const PX_PER_SEC = 110; // pixels per second — same on every screen
+    let pos = 0;
+    let lastTime = null;
+
+    function step(timestamp) {
+      if (!lastTime) lastTime = timestamp;
+      const delta = (timestamp - lastTime) / 1000; // seconds
+      lastTime = timestamp;
+      pos -= PX_PER_SEC * delta;
+      // Reset when we've scrolled exactly half the track (seamless loop)
+      const halfWidth = track.scrollWidth / 2;
+      if (Math.abs(pos) >= halfWidth) pos = 0;
+      track.style.transform = 'translateX(' + pos + 'px)';
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
+
+  // ══════════════════════════════════════
+  // SHAIRO — close tooltip when clicking outside
+  // ══════════════════════════════════════
+  document.addEventListener('click', function(e) {
+    const wrap = document.getElementById('shairo-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      wrap.classList.remove('active');
+    }
+  });
+
+  // ── Mobile menu ──
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mob-menu');
+    const icon = document.getElementById('ham-icon');
+    const isOpen = !menu.classList.contains('hidden');
+    menu.classList.toggle('hidden', isOpen);
+    icon.innerHTML = isOpen
+      ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>'
+      : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>';
+  }
+
+  // Close menu when resizing to desktop
+  window.addEventListener('resize', function() {
+    if (window.innerWidth >= 768) {
+      const menu = document.getElementById('mob-menu');
+      const icon = document.getElementById('ham-icon');
+      if (menu) menu.classList.add('hidden');
+      if (icon) icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+    }
+  });
+
+  // ── Navbar scroll ──
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('up'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── Accordion ──
+  function toggleAccordion(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    // close all
+    document.querySelectorAll('.accordion-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.accordion-btn').forEach(b => b.classList.remove('open'));
+    if (!isOpen) {
+      body.classList.add('open');
+      btn.classList.add('open');
+    }
+  }
+
+  // ── Form submit ──
+  function submitForm() {
+    const inputs = document.querySelectorAll('.form-input[type]');
+    const name = inputs[0].value.trim();
+    const phone = inputs[1].value.trim();
+    const email = inputs[2].value.trim();
+    if (!name || !phone) { alert('Por favor completa tu nombre y WhatsApp.'); return; }
+    const msg = encodeURIComponent(`Hola, soy ${name}. Mi WhatsApp: ${phone}. Correo: ${email || 'No indicado'}. Me interesa el Centro de Idiomas de SIDEP.`);
+    window.open(`https://wa.me/573026291451?text=${msg}`, '_blank');
+  }
+</script>
+
+</body>
+</html>

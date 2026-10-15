@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instituto SIDEP – Educación para el Trabajo y Desarrollo Humano</title>
+  <link rel="icon" type="image/webp" href="assets/Favicon.webp"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   '#26519F',
+            accent:    '#FEDF5D',
+            cyan:      '#30B7E0',
+            dark:      '#0D1B3E',
+          },
+          fontFamily: {
+            nunito: ['Nunito', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+
+    /* ── Navbar scroll ── */
+    #navbar { transition: background .3s, box-shadow .3s; }
+    #navbar.scrolled { background: #1a3a7a !important; box-shadow: 0 4px 24px rgba(0,0,0,.35); }
+
+    /* ── Hero slider ── */
+    .slide { display:none; animation: fadeIn .8s ease; }
+    .slide.active { display:flex; }
+    @keyframes fadeIn { from{opacity:0;transform:scale(1.03)} to{opacity:1;transform:scale(1)} }
+
+    /* ── Gradient overlay ── */
+    .hero-overlay { background: linear-gradient(120deg, rgba(13,27,62,.85) 40%, rgba(38,81,159,.45) 100%); }
+
+    /* ── Accent underline ── */
+    .accent-line::after { content:''; display:block; width:60px; height:4px; background:#FEDF5D; border-radius:2px; margin-top:10px; }
+    .accent-line-center::after { content:''; display:block; width:60px; height:4px; background:#FEDF5D; border-radius:2px; margin:10px auto 0; }
+
+    /* ── Card hover ── */
+    .program-card { transition: transform .3s, box-shadow .3s; }
+    .program-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(38,81,159,.18); }
+    /* La barra de color superior escala sutilmente al hacer hover */
+    .program-card:hover .card-bar { transform: scaleX(1.04); }
+
+    /* ── Convenios ticker ── */
+    .ticker-track {
+      display:flex;
+      gap:3rem;
+      white-space:nowrap;
+      will-change:transform;
+      transform:translateX(0);
+    }
+
+    /* En móvil compactamos un poco los logos, pero la velocidad NO depende del ancho de pantalla */
+    @media (max-width: 640px) {
+      .ticker-track { gap:1.5rem; }
+      .ticker-card {
+        min-width:118px;
+        height:98px;
+        padding:.75rem 1rem;
+      }
+      .ticker-card img {
+        max-height:62px;
+        max-width:170px;
+      }
+    }
+
+    /* ── Dot indicator ── */
+    .dot { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.4); cursor:pointer; transition:.3s; }
+    .dot.active { background:#FEDF5D; transform:scale(1.3); }
+
+    /* ── Smooth scroll ── */
+    html { scroll-behavior: smooth; }
+
+    /* ── WhatsApp float ── */
+    #wa-float { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.5)} 70%{box-shadow:0 0 0 12px rgba(37,211,102,0)} }
+
+    /* ── Section entrance ── */
+    .reveal { opacity:0; transform:translateY(30px); transition: opacity .7s, transform .7s; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ── Service card ── */
+    .service-card { background:white; border-radius:1rem; padding:1.75rem; transition:.3s; border:2px solid transparent; }
+    .service-card:hover { border-color:#26519F; transform:translateY(-4px); }
+
+    /* ── Gradient bg sections ── */
+    .bg-wave { background: linear-gradient(135deg,#0D1B3E 0%,#26519F 100%); }
+
+    /* ── Modalidad card ── */
+    .modal-card { background: rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.15); backdrop-filter:blur(10px); border-radius:1.25rem; padding:2rem; transition:.3s; }
+    .modal-card:hover { background:rgba(255,255,255,.14); transform:scale(1.03); }
+
+    /* ── Shairo mascot ── */
+    #shairo-wrap{position:fixed;bottom:1.75rem;right:1.75rem;z-index:60;cursor:pointer;}
+    #shairo-tooltip{position:absolute;bottom:calc(100% + 12px);right:0;width:240px;background:#081225;border:1.5px solid #30B7E0;border-radius:1rem;padding:1rem;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .3s,transform .3s;box-shadow:0 8px 32px rgba(0,0,0,.5);}
+    #shairo-wrap:hover #shairo-tooltip,#shairo-wrap.active #shairo-tooltip{opacity:1;pointer-events:all;transform:translateY(0);}
+    #shairo-tooltip::after{content:'';position:absolute;bottom:-10px;right:24px;border:5px solid transparent;border-top-color:#30B7E0;}
+    @media(max-width:360px){#shairo-tooltip{right:-10px;width:210px;}}
+
+    /* ── Ticker cards (logos convenios) ── */
+    .ticker-card {
+      flex-shrink: 0;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 1.5rem;
+      height: 126px;
+      min-width: 140px;
+      max-width: 280px;
+      transition: box-shadow .3s, transform .3s;
+    }
+    .ticker-card:hover { box-shadow: 0 8px 24px rgba(38,81,159,.18); transform: translateY(-3px); }
+    .ticker-card img { max-height: 79px; max-width: 224px; width: auto; height: auto; object-fit: contain; }
+    
+    .service-card-link {
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.service-card-link h3 {
+  transition: color .25s;
+}
+
+.service-card-link:hover h3 {
+  color: #26519F;
+}
+
+.service-card-link .service-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-top: 1rem;
+  color: #26519F;
+  font-size: .8rem;
+  font-weight: 900;
+}
+
+.service-card-link .service-cta span {
+  transition: transform .25s;
+}
+
+.service-card-link:hover .service-cta span {
+  transform: translateX(4px);
+}
+
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<!-- ══════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md" style="background:#0D1B3E;">
+  <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-2 group">
+      <img src="assets/SIDEP_logo1.webp" alt="Logo SIDEP" class="h-10 w-auto group-hover:opacity-90 transition"/>
+    </a>
+
+    <!-- Desktop menu -->
+    <ul class="hidden lg:flex items-center gap-6 text-sm font-semibold text-white/80">
+      <li><a href="#programas" class="hover:text-accent transition">Programas</a></li>
+      <li><a href="#modalidades" class="hover:text-accent transition">Modalidades</a></li>
+      <li><a href="#cursos_cortos" class="hover:text-accent transition">Cursos Cortos</a></li>
+      <li><a href="#servicios" class="hover:text-accent transition">Servicios</a></li>
+      <li><a href="#convenios" class="hover:text-accent transition">Convenios</a></li>
+      <li><a href="#nosotros" class="hover:text-accent transition">Nosotros</a></li>
+      <li><a href="#contacto" class="hover:text-accent transition">Contacto</a></li>
+    </ul>
+
+    <!-- CTA -->
+    <a href="https://wa.me/573026291451?text=Hola,%20quiero%20inscribirme%20en%20SIDEP" target="_blank"
+       class="hidden md:flex items-center gap-2 bg-accent text-primary font-black px-5 py-2.5 rounded-xl hover:bg-yellow-300 transition text-sm shadow-lg">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Escríbenos
+    </a>
+
+    <!-- Mobile hamburger -->
+    <button id="menu-btn" class="lg:hidden text-white p-2">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div id="mobile-menu" class="hidden lg:hidden bg-dark/95 px-4 pb-4">
+    <ul class="flex flex-col gap-3 text-white/90 font-semibold text-sm pt-2">
+      <li><a href="#programas" class="block py-2 border-b border-white/10 hover:text-accent transition">Programas</a></li>
+      <li><a href="#modalidades" class="block py-2 border-b border-white/10 hover:text-accent transition">Modalidades</a></li>
+      <li><a href="#ia" class="block py-2 border-b border-white/10 hover:text-accent transition">Cursos IA</a></li>
+      <li><a href="#servicios" class="block py-2 border-b border-white/10 hover:text-accent transition">Servicios</a></li>
+      <li><a href="#convenios" class="block py-2 border-b border-white/10 hover:text-accent transition">Convenios</a></li>
+      <li><a href="#nosotros" class="block py-2 border-b border-white/10 hover:text-accent transition">Nosotros</a></li>
+      <li><a href="#contacto" class="block py-2 hover:text-accent transition">Contacto</a></li>
+    </ul>
+    <a href="https://wa.me/573026291451?text=Hola,%20quiero%20inscribirme%20en%20SIDEP" target="_blank"
+       class="mt-4 flex items-center justify-center gap-2 bg-accent text-primary font-black px-5 py-2.5 rounded-xl text-sm">
+      📲 Escríbenos por WhatsApp
+    </a>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════════════
+     HERO SLIDER
+════════════════════════════════════════ -->
+<section id="hero" class="relative h-screen min-h-[600px] overflow-hidden">
+
+  <!-- Slide 1 -->
+  <div class="slide active absolute inset-0 items-center" style="background-image:url('assets/slide1.webp');background-size:cover;background-position:center;background-repeat:no-repeat;background-color:#26519F;">
+    <div class="hero-overlay absolute inset-0"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-white">
+      <span class="inline-block bg-accent text-primary text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-5">Avalado por Sec. Educación Bogotá</span>
+      <h1 class="text-4xl md:text-6xl font-black leading-tight mb-3">
+        Educación para el<br/><span class="text-accent">Trabajo y Desarrollo</span><br/>Humano
+      </h1>
+      <p class="text-lg md:text-xl text-white/80 font-semibold mb-8 max-w-xl">Fórmate en ciclos cortos con altos estándares de calidad y consigue el empleo que mereces.</p>
+      <div class="flex flex-wrap gap-4">
+        <a href="#contacto" class="bg-accent text-primary font-black px-8 py-3.5 rounded-xl hover:bg-yellow-300 transition shadow-xl text-base">Inscríbete ahora</a>
+        <a href="https://wa.me/573026291451?text=Hola,%20quiero%20inscribirme%20en%20SIDEP" target="_blank" class="border-2 border-white/60 text-white font-bold px-8 py-3.5 rounded-xl hover:bg-white/10 transition text-base flex items-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 2 -->
+  <div class="slide absolute inset-0 items-center" style="background-image:url('assets/slide2.webp');background-size:cover;background-position:center;background-repeat:no-repeat;background-color:#1a3a6e;">
+    <div class="hero-overlay absolute inset-0"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-white">
+      <span class="inline-block bg-cyan text-white text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-5">Modalidad Presencial · A Distancia · Híbrida</span>
+      <h1 class="text-4xl md:text-6xl font-black leading-tight mb-3">
+        Estudia un Técnico y<br/><span class="text-accent">continúa con nuestras</span><br/>Universidades Aliadas
+      </h1>
+      <p class="text-lg md:text-xl text-white/80 font-semibold mb-8 max-w-xl">Accede a programas técnicos laborales con contenidos modernos y entretenidos en modalidad a distancia o híbrida.</p>
+      <div class="flex flex-wrap gap-4">
+        <a href="#programas" class="bg-accent text-primary font-black px-8 py-3.5 rounded-xl hover:bg-yellow-300 transition shadow-xl text-base">Ver programas</a>
+        <a href="#modalidades" class="border-2 border-white/60 text-white font-bold px-8 py-3.5 rounded-xl hover:bg-white/10 transition text-base">Modalidades</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3 -->
+  <div class="slide absolute inset-0 items-center" style="background-image:url('assets/slide3.webp');background-size:cover;background-position:center;background-repeat:no-repeat;background-color:#0d2b5e;">
+    <div class="hero-overlay absolute inset-0"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-white">
+      <span class="inline-block bg-primary text-white text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-5">🤖 Nuevos: Cursos en Inteligencia Artificial</span>
+      <h1 class="text-4xl md:text-6xl font-black leading-tight mb-3">
+        Actualízate con<br/><span class="text-accent">Inteligencia</span><br/>Artificial
+      </h1>
+      <p class="text-lg md:text-xl text-white/80 font-semibold mb-8 max-w-xl">Microcertificaciones, diplomados y cursos cortos diseñados para el mundo laboral del futuro.</p>
+      <div class="flex flex-wrap gap-4">
+        <a href="#ia" class="bg-accent text-primary font-black px-8 py-3.5 rounded-xl hover:bg-yellow-300 transition shadow-xl text-base">Quiero aprender IA</a>
+        <a href="https://wa.me/573026291451?text=Hola,%20quiero%20info%20de%20los%20cursos%20de%20IA" target="_blank" class="border-2 border-white/60 text-white font-bold px-8 py-3.5 rounded-xl hover:bg-white/10 transition text-base">Más info</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+    <div class="dot active" onclick="goSlide(0)"></div>
+    <div class="dot" onclick="goSlide(1)"></div>
+    <div class="dot" onclick="goSlide(2)"></div>
+  </div>
+  <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition backdrop-blur-sm">‹</button>
+  <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition backdrop-blur-sm">›</button>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     STATS STRIP
+════════════════════════════════════════ -->
+<div class="bg-primary">
+  <div class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
+    <div><p class="text-3xl font-black text-accent">6+</p><p class="text-sm font-semibold text-white/70 mt-1">Programas Técnicos</p></div>
+    <div><p class="text-3xl font-black text-accent">1 año</p><p class="text-sm font-semibold text-white/70 mt-1">Duración / 3 ciclos</p></div>
+    <div><p class="text-3xl font-black text-accent">100%</p><p class="text-sm font-semibold text-white/70 mt-1">Avalado por MEN</p></div>
+    <div><p class="text-3xl font-black text-accent">Todo <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" width="28" height="19" style="border-radius:3px;display:inline-block;box-shadow:0 1px 4px rgba(0,0,0,.4);"><rect width="3" height="2" fill="#CE1126"/><rect width="3" height="1.5" fill="#003893"/><rect width="3" height="1" fill="#FCD116"/></svg></span></p><p class="text-sm font-semibold text-white/70 mt-1">Convenios a nivel nacional</p></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PROGRAMAS TÉCNICOS
+════════════════════════════════════════ -->
+<section id="programas" class="py-24 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-14 reveal">
+      <span class="text-primary font-black text-sm uppercase tracking-widest">Oferta Académica</span>
+      <h2 class="text-4xl font-black text-dark mt-2 accent-line-center">Técnicos Laborales</h2>
+      <p class="text-gray-500 mt-6 max-w-xl mx-auto font-medium">Un año de formación estructurada en 3 ciclos. Contenidos modernos con resolución del Secretaría de Educación de Bogotá.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <!-- Card 1 – Auxiliar Administrativo · color #35b66f -->
+      <div class="program-card bg-white rounded-2xl overflow-hidden shadow-md reveal">
+        <!-- Barra de color superior -->
+        <div class="h-1.5 w-full" style="background:#35b66f;"></div>
+        <div class="h-40 overflow-hidden">
+          <img src="assets/foto_aux_admin.webp" alt="Auxiliar Administrativo" class="w-full h-full object-cover hover:scale-105 transition duration-500"/>
+        </div>
+        <div class="p-5">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 text-xl" style="background:rgba(53,182,111,0.12);">🗂️</div>
+          <h3 class="text-lg font-black text-dark mb-2">Auxiliar Administrativo</h3>
+          <p class="text-gray-500 text-sm font-medium mb-3">Gestión documental, atención al cliente y procesos administrativos aplicados al mundo empresarial.</p>
+          <a href="landing_tecnico_auxiliar_administrativo.html" class="inline-flex items-center gap-1 font-black text-sm hover:gap-3 transition-all" style="color:#35b66f;">Ver más →</a>
+        </div>
+      </div>
+
+      <!-- Card 2 – Auxiliar Contable · color #f0545c -->
+      <div class="program-card bg-white rounded-2xl overflow-hidden shadow-md reveal">
+        <!-- Barra de color superior -->
+        <div class="h-1.5 w-full" style="background:#f0545c;"></div>
+        <div class="h-40 overflow-hidden">
+          <img src="assets/foto_aux_contable.webp" alt="Contabilidad" class="w-full h-full object-cover hover:scale-105 transition duration-500"/>
+        </div>
+        <div class="p-5">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 text-xl" style="background:rgba(240,84,92,0.12);">📊</div>
+          <h3 class="text-lg font-black text-dark mb-2">Auxiliar Contable</h3>
+          <p class="text-gray-500 text-sm font-medium mb-3">Registros contables, facturación electrónica, nómina y manejo de software contable actualizado.</p>
+          <a href="landing_tecnico_contable.html" class="inline-flex items-center gap-1 font-black text-sm hover:gap-3 transition-all" style="color:#f0545c;">Ver más →</a>
+        </div>
+      </div>
+
+      <!-- Card 3 – Sistemas con Énfasis en Programación · color #54b1e3 -->
+      <div class="program-card bg-white rounded-2xl overflow-hidden shadow-md reveal">
+        <!-- Barra de color superior -->
+        <div class="h-1.5 w-full" style="background:#54b1e3;"></div>
+        <div class="h-40 overflow-hidden">
+          <img src="assets/foto_programacion.webp" alt="Sistemas Programación" class="w-full h-full object-cover hover:scale-105 transition duration-500"/>
+        </div>
+        <div class="p-5">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 text-xl" style="background:rgba(84,177,227,0.12);">💻</div>
+          <h3 class="text-lg font-black text-dark mb-2">Sistemas con Énfasis en Programación</h3>
+          <p class="text-gray-500 text-sm font-medium mb-3">Lógica de programación, desarrollo web básico, bases de datos y soporte técnico informático.</p>
+          <a href="landing_tecnico_programacion.html" class="inline-flex items-center gap-1 font-black text-sm hover:gap-3 transition-all" style="color:#54b1e3;">Ver más →</a>
+        </div>
+      </div>
+
+      <!-- Card 4 – SST · color #fcb75e -->
+      <div class="program-card bg-white rounded-2xl overflow-hidden shadow-md reveal">
+        <!-- Barra de color superior -->
+        <div class="h-1.5 w-full" style="background:#fcb75e;"></div>
+        <div class="h-40 overflow-hidden">
+          <img src="assets/foto_sst.webp" alt="SST" class="w-full h-full object-cover hover:scale-105 transition duration-500"/>
+        </div>
+        <div class="p-5">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 text-xl" style="background:rgba(252,183,94,0.12);">🦺</div>
+          <h3 class="text-lg font-black text-dark mb-2">Seguridad y Salud en el Trabajo</h3>
+          <p class="text-gray-500 text-sm font-medium mb-3">Normativa SST, identificación de riesgos, COPASST, planes de emergencia y SG-SST.</p>
+          <a href="landing_tecnico_SST.html" class="inline-flex items-center gap-1 font-black text-sm hover:gap-3 transition-all" style="color:#fcb75e;">Ver más →</a>
+        </div>
+      </div>
+
+      <!-- Card 5 – Telecomunicaciones · color #1c9ab0 -->
+      <div class="program-card bg-white rounded-2xl overflow-hidden shadow-md reveal">
+        <!-- Barra de color superior -->
+        <div class="h-1.5 w-full" style="background:#1c9ab0;"></div>
+        <div class="h-40 overflow-hidden">
+          <img src="assets/foto_telecomunicaciones.webp" alt="Telecomunicaciones" class="w-full h-full object-cover hover:scale-105 transition duration-500"/>
+        </div>
+        <div class="p-5">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 text-xl" style="background:rgba(28,154,176,0.12);">📡</div>
+          <h3 class="text-lg font-black text-dark mb-2">Instalación y Reparación de Equipos de Telecomunicaciones</h3>
+          <p class="text-gray-500 text-sm font-medium mb-3">Redes, cableado estructurado, fibra óptica y mantenimiento de equipos de comunicaciones.</p>
+          <a href="landing_tecnico_telecomunicaciones.html" class="inline-flex items-center gap-1 font-black text-sm hover:gap-3 transition-all" style="color:#1c9ab0;">Ver más →</a>
+        </div>
+      </div>
+
+
+      <!-- Card 6 – Marketing Digital · color #ed4795 -->
+      <div class="program-card bg-white rounded-2xl overflow-hidden shadow-md reveal">
+        <!-- Barra de color superior -->
+        <div class="h-1.5 w-full" style="background:#ed4795;"></div>
+        <div class="h-40 overflow-hidden">
+          <img src="assets/foto_marketing_digital.webp" alt="Marketing Digital" class="w-full h-full object-cover hover:scale-105 transition duration-500"/>
+        </div>
+        <div class="p-5">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 text-xl" style="background:rgba(237,71,149,0.12);">📱</div>
+          <h3 class="text-lg font-black text-dark mb-2">Marketing Digital</h3>
+          <p class="text-gray-500 text-sm font-medium mb-3">Estrategias digitales, redes sociales, pauta, analítica, contenidos y herramientas para posicionar marcas en entornos digitales.</p>
+          <a href="landing_tecnico_markering_digital.html" class="inline-flex items-center gap-1 font-black text-sm hover:gap-3 transition-all" style="color:#ed4795;">Ver más →</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CTA horizontal -->
+    <div class="mt-12 bg-wave rounded-2xl p-6 md:p-8 reveal flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+      <div class="text-center md:text-left">
+        <p class="text-accent font-black text-sm uppercase tracking-widest mb-2">¿Listo para empezar?</p>
+        <h3 class="text-white font-black text-2xl md:text-3xl leading-snug">Tu futuro profesional comienza aquí</h3>
+        <p class="text-white/70 font-medium text-sm mt-2">Proceso de inscripción ágil. Cupos limitados por ciclo.</p>
+      </div>
+      <a href="https://wa.me/573026291451?text=Hola,%20quiero%20inscribirme%20en%20SIDEP" target="_blank"
+         class="bg-accent text-primary font-black px-8 py-3.5 rounded-xl text-center hover:bg-yellow-300 transition shadow-lg whitespace-nowrap">
+        📲 Inscríbete ahora
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CURSOS IA
+════════════════════════════════════════ -->
+<section id="cursos_cortos" class="py-24 bg-dark overflow-hidden relative">
+  <!-- deco blobs -->
+  <div class="absolute -top-20 -right-20 w-96 h-96 bg-cyan/10 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-primary/20 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="max-w-7xl mx-auto px-4 relative z-10">
+    <div class="text-center mb-14 reveal">
+      <span class="inline-flex items-center gap-2 bg-cyan/20 text-cyan font-black text-xs uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">🤖 Innovación Educativa</span>
+      <h2 class="text-4xl font-black text-white mt-2 accent-line-center">Cursos Cortos, Microcertificaciones<br/>y Diplomados en IA</h2>
+      <p class="text-white/60 mt-6 max-w-xl mx-auto font-medium">Aplica Inteligencia Artificial en tu trabajo desde el primer día. Diseñados para el Colombia laboral de hoy.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 mb-12">
+      <a href="landing_cursos/landing_cursos_cortos_ia.html"
+   class="modal-card reveal text-center flex flex-col no-underline"
+   aria-label="Ver la oferta de Cursos Cortos en IA">
+
+  <div class="text-5xl mb-3">⚡</div>
+
+  <h3 class="text-white font-black text-xl mb-2">
+    Cursos Cortos en IA
+  </h3>
+
+  <p class="text-white/60 font-medium text-sm">
+    Aprende a usar herramientas de IA como ChatGPT, Copilot y más,
+    aplicadas a tu trabajo o negocio en pocas semanas.
+  </p>
+
+  <span class="inline-flex items-center justify-center gap-2 mt-auto pt-5 text-accent text-sm font-black">
+    Ver oferta <span>→</span>
+  </span>
+</a>
+      <a href="landing_cursos/landing_microcertificaciones.html"
+   class="modal-card reveal text-center flex flex-col no-underline"
+   style="transition-delay:.15s"
+   aria-label="Ver la oferta de Microcertificaciones">
+
+  <div class="text-5xl mb-3">🏅</div>
+
+  <h3 class="text-white font-black text-xl mb-2">
+    Microcertificaciones
+  </h3>
+
+  <p class="text-white/60 font-medium text-sm">
+    Credenciales digitales verificables que acreditan tus competencias
+    específicas ante empresas y empleadores.
+  </p>
+
+  <span class="inline-flex items-center justify-center gap-2 mt-auto pt-5 text-accent text-sm font-black">
+    Ver oferta <span>→</span>
+  </span>
+</a>
+      <a href="landing_cursos/landing_diplomados_especializados.html"
+   class="modal-card reveal text-center flex flex-col no-underline"
+   style="transition-delay:.3s"
+   aria-label="Ver la oferta de Diplomados Especializados">
+
+  <div class="text-5xl mb-3">🎓</div>
+
+  <h3 class="text-white font-black text-xl mb-2">
+    Diplomados Especializados
+  </h3>
+
+  <p class="text-white/60 font-medium text-sm">
+    Profundiza en IA aplicada a negocios, marketing, finanzas y más áreas
+    de alto impacto profesional.
+  </p>
+
+  <span class="inline-flex items-center justify-center gap-2 mt-auto pt-5 text-accent text-sm font-black">
+    Ver oferta <span>→</span>
+  </span>
+</a>
+    </div>
+
+    <!-- Beneficios -->
+    <div class="bg-white/5 rounded-2xl p-8 reveal grid md:grid-cols-3 gap-8 text-center border border-white/10">
+      <div>
+        <p class="text-3xl font-black text-accent mb-1">Aplicación</p>
+        <p class="text-white/60 text-sm font-medium">Real desde el primer módulo</p>
+      </div>
+      <div>
+        <p class="text-3xl font-black text-cyan mb-1">Empleabilidad</p>
+        <p class="text-white/60 text-sm font-medium">Diferénciate en el mercado laboral</p>
+      </div>
+      <div>
+        <p class="text-3xl font-black text-white mb-1">Actualización</p>
+        <p class="text-white/60 text-sm font-medium">Contenido vivo y actualizado constantemente</p>
+      </div>
+    </div>
+
+    <div class="text-center mt-10 reveal">
+      <a href="https://wa.me/573026291451?text=Hola,%20quiero%20info%20de%20los%20cursos%20de%20IA" target="_blank"
+         class="inline-block bg-accent text-primary font-black px-10 py-4 rounded-xl hover:bg-yellow-300 transition shadow-xl text-base">
+        🚀 Quiero aprender IA
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     MODALIDADES
+════════════════════════════════════════ -->
+<section id="modalidades" class="py-24 bg-primary relative overflow-hidden">
+  <div class="absolute inset-0 opacity-10" style="background-image:radial-gradient(circle at 2px 2px, white 1px, transparent 0);background-size:32px 32px;"></div>
+
+  <div class="max-w-6xl mx-auto px-4 relative z-10">
+    <div class="text-center mb-14 reveal">
+      <span class="text-accent font-black text-sm uppercase tracking-widest">Flexibilidad Total</span>
+      <h2 class="text-4xl font-black text-white mt-2 accent-line-center">Modalidades de Estudio</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="modal-card reveal text-center">
+        <div class="text-5xl mb-5">🏛️</div>
+        <h3 class="text-white font-black text-xl mb-3">Presencial</h3>
+        <p class="text-white/70 font-medium text-sm">Clases en nuestra sede en Bogotá con docentes especializados. Interacción directa, talleres prácticos y comunidad estudiantil activa.</p>
+        <div class="mt-4 text-accent text-sm font-black">Bogotá · Carrera 106 #81-95</div>
+      </div>
+      <div class="modal-card reveal text-center" style="transition-delay:.1s; background:rgba(254,223,93,.12); border-color:rgba(254,223,93,.35);">
+        <div class="text-5xl mb-5">🌐</div>
+        <h3 class="text-white font-black text-xl mb-3">A distancia</h3>
+        <p class="text-white/70 font-medium text-sm">Estudia un técnico laboral y continúa tus estudios con nuestras universidades aliadas. Plataforma digital con clases en vivo y acompañamiento continuo.</p>
+        <div class="mt-4 text-accent text-sm font-black">100% online · Todo el país</div>
+      </div>
+      <div class="modal-card reveal text-center" style="transition-delay:.2s">
+        <div class="text-5xl mb-5">🔀</div>
+        <h3 class="text-white font-black text-xl mb-3">Híbrida</h3>
+        <p class="text-white/70 font-medium text-sm">Lo mejor de los dos mundos. Combina sesiones presenciales con estrategias de educación a distancia para mayor flexibilidad.</p>
+        <div class="mt-4 text-accent text-sm font-black">Flexible · A tu ritmo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     LÍNEAS DE SERVICIOS
+════════════════════════════════════════ -->
+<section id="servicios" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-14 reveal">
+      <span class="text-primary font-black text-sm uppercase tracking-widest">Cobertura Integral</span>
+      <h2 class="text-4xl font-black text-dark mt-2 accent-line-center">Líneas de Servicios</h2>
+      <p class="text-gray-500 mt-6 max-w-xl mx-auto font-medium">SIDEP ofrece soluciones educativas integrales para personas, empresas e instituciones.</p>
+    </div>
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <a href="landing_servicios/articulacion_educativa.html"
+   class="service-card service-card-link reveal"
+   aria-label="Ver Articulación Educativa">
+  <div class="text-4xl mb-3 text-center">🔗</div>
+  <h3 class="text-dark font-black text-lg mb-2">Articulación Educativa</h3>
+  <p class="text-gray-500 text-sm font-medium">
+    Integración con instituciones de educación media y superior para ampliar las oportunidades de los estudiantes.
+  </p>
+  <span class="service-cta">Ver servicio <span>→</span></span>
+</a>
+
+<a href="landing_servicios/formacion_continua.html"
+   class="service-card service-card-link reveal"
+   style="transition-delay:.08s"
+   aria-label="Ver Formación Continua">
+  <div class="text-4xl mb-3 text-center">📚</div>
+  <h3 class="text-dark font-black text-lg mb-2">Formación Continua</h3>
+  <p class="text-gray-500 text-sm font-medium">
+    Actualización profesional constante para quienes ya están en el mercado laboral y buscan crecer.
+  </p>
+  <span class="service-cta">Ver servicio <span>→</span></span>
+</a>
+
+<a href="landing_servicios/formacion_desarrollo_empresarial.html"
+   class="service-card service-card-link reveal"
+   style="transition-delay:.16s"
+   aria-label="Ver Formación y Desarrollo Empresarial">
+  <div class="text-4xl mb-3 text-center">🏢</div>
+  <h3 class="text-dark font-black text-lg mb-2">Formación y Desarrollo Empresarial</h3>
+  <p class="text-gray-500 text-sm font-medium">
+    Programas in-company adaptados a las necesidades específicas de cada organización.
+  </p>
+  <span class="service-cta">Ver servicio <span>→</span></span>
+</a>
+      <a href="landing_servicios/centro_idiomas.html"
+   class="service-card service-card-link reveal"
+   style="transition-delay:.24s"
+   aria-label="Ver el servicio de Centro de Idiomas">
+
+  <div class="text-4xl mb-3 text-center">🌍</div>
+
+  <h3 class="text-dark font-black text-lg mb-2">
+    Centro de Idiomas
+  </h3>
+
+  <p class="text-gray-500 text-sm font-medium">
+    Inglés y otros idiomas con metodologías comunicativas orientadas al entorno laboral y profesional.
+  </p>
+
+  <span class="service-cta">
+    Ver servicio <span>→</span>
+  </span>
+</a>
+      <a href="landing_servicios/responsabilidad_social.html"
+   class="service-card service-card-link reveal"
+   style="transition-delay:.32s"
+   aria-label="Ver el servicio de Responsabilidad Social">
+
+  <div class="text-4xl mb-3 text-center">🤝</div>
+
+  <h3 class="text-dark font-black text-lg mb-2">
+    Responsabilidad Social
+  </h3>
+
+  <p class="text-gray-500 text-sm font-medium">
+    Programas educativos con impacto social para comunidades vulnerables y poblaciones especiales.
+  </p>
+
+  <span class="service-cta">
+    Ver servicio <span>→</span>
+  </span>
+</a>
+      <a href="landing_servicios/sostenibilidad_social_empresarial_ambiental.html"
+   class="service-card service-card-link reveal"
+   style="transition-delay:.40s"
+   aria-label="Ver el servicio de Sostenibilidad Social, Empresarial y Ambiental">
+
+  <div class="text-4xl mb-3 text-center">🌱</div>
+
+  <h3 class="text-dark font-black text-lg mb-2">
+    Sostenibilidad Social, Empresarial y Ambiental
+  </h3>
+
+  <p class="text-gray-500 text-sm font-medium">
+    Formación orientada al desarrollo sostenible, economía circular y gestión ambiental responsable.
+  </p>
+
+  <span class="service-cta">
+    Ver servicio <span>→</span>
+  </span>
+</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CONVENIOS
+════════════════════════════════════════ -->
+<section id="convenios" class="py-20 bg-gray-50 overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 text-center mb-12 reveal">
+    <span class="text-primary font-black text-sm uppercase tracking-widest">Alianzas Estratégicas</span>
+    <h2 class="text-4xl font-black text-dark mt-2 accent-line-center">Convenios y Alianzas</h2>
+    <p class="text-gray-500 mt-5 max-w-lg mx-auto font-medium">Empresas que confían en nuestra formación para reclutar y desarrollar talento humano.</p>
+  </div>
+
+  <!-- Ticker de logos — 9 aliados × 2 para loop seamless -->
+  <div class="relative overflow-hidden py-4">
+    <div class="ticker-track">
+          <div class="ticker-card"><img src="assets/convenios_logos/unihorizonte.webp" alt="Unihorizonte"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/cenda.webp" alt="CENDA"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/incca.webp" alt="INCCA"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/lpb.webp" alt="Aliado 4"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/Funza_ciundad_u.webp" alt="Aliado 5"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/Asoben.webp" alt="Aliado 6"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/logo-asomuna.webp" alt="Aliado 7"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/LOGO-HMV.webp" alt="Aliado 8"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/Real_de_colombia.webp" alt="Aliado 8"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/Mayeutico.webp" alt="Aliado 9"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/unihorizonte.webp" alt="Unihorizonte"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/cenda.webp" alt="CENDA"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/incca.webp" alt="INCCA"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/lpb.webp" alt="Aliado 4"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/Funza_ciundad_u.webp" alt="Aliado 5"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/Asoben.webp" alt="Aliado 6"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/logo-asomuna.webp" alt="Aliado 7"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/LOGO-HMV.webp" alt="Aliado 8"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/Real_de_colombia.webp" alt="Aliado 8"/></div>
+          <div class="ticker-card"><img src="assets/convenios_logos/Mayeutico.webp" alt="Aliado 9"/></div>
+    </div>
+  </div>
+
+  <div class="text-center mt-10">
+    <a href="https://wa.me/573026291451?text=Hola,%20quiero%20crear%20un%20convenio%20con%20SIDEP" target="_blank"
+       class="inline-block border-2 border-primary text-primary font-black px-8 py-3 rounded-xl hover:bg-primary hover:text-white transition text-sm">
+      🤝 Crear convenio con SIDEP
+    </a>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     NOSOTROS
+════════════════════════════════════════ -->
+<section id="nosotros" class="py-24 bg-white">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div class="reveal">
+        <span class="text-primary font-black text-sm uppercase tracking-widest">Instituto SIDEP</span>
+        <h2 class="text-4xl font-black text-dark mt-2 mb-6 accent-line">Comprometidos con la<br/>Excelencia Educativa</h2>
+        <p class="text-gray-600 font-medium mb-8 leading-relaxed">Somos un instituto de educación para el trabajo y el desarrollo humano, comprometidos con la excelencia académica. Basados en ciclos cortos con altos estándares de calidad, contenidos modernos y avalados por el Secretaría de Educación de Bogotá de Colombia.</p>
+        <div class="grid grid-cols-2 gap-6">
+          <div class="bg-gray-50 rounded-xl p-5">
+            <h4 class="font-black text-primary mb-2">🎯 Misión</h4>
+            <p class="text-gray-500 text-sm font-medium">Formar personas competentes para el mundo laboral mediante programas técnicos de calidad, pertinentes y accesibles.</p>
+          </div>
+          <div class="bg-gray-50 rounded-xl p-5">
+            <h4 class="font-black text-primary mb-2">🔭 Visión</h4>
+            <p class="text-gray-500 text-sm font-medium">Ser el instituto técnico laboral de mayor impacto en Colombia, reconocido por su innovación y resultados de empleabilidad.</p>
+          </div>
+        </div>
+        <div class="mt-6 bg-primary/5 rounded-xl p-5 border-l-4 border-primary">
+          <h4 class="font-black text-primary mb-2">📐 Enfoque Educativo</h4>
+          <p class="text-gray-500 text-sm font-medium">Ciclos cortos · Contenidos actualizados · Metodología activa · Vinculación empresarial · Cobertura nacional</p>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="relative">
+          <img src="assets/En_clase_sidep.webp" alt="Estudiantes SIDEP" class="rounded-2xl w-full object-cover h-96 shadow-2xl"/>
+          <div class="absolute -bottom-6 -left-6 bg-accent text-primary rounded-2xl p-5 shadow-xl font-black">
+            <p class="text-3xl">SEB</p>
+            <p class="text-xs font-bold mt-1">Aval Oficial</p>
+          </div>
+          <div class="absolute -top-6 -right-6 bg-primary text-white rounded-2xl p-4 shadow-xl font-black text-center">
+            <p class="text-2xl">3 Ciclos</p>
+            <p class="text-xs font-semibold mt-1 text-white/70">1 Año de formación</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CONTACTO / CTA FINAL
+════════════════════════════════════════ -->
+<section id="contacto" class="py-24 bg-wave relative overflow-hidden">
+  <div class="absolute inset-0 opacity-5" style="background-image:radial-gradient(circle at 2px 2px, white 1px, transparent 0);background-size:40px 40px;"></div>
+
+  <div class="max-w-6xl mx-auto px-4 relative z-10">
+    <div class="grid md:grid-cols-2 gap-16 items-start">
+
+      <!-- Left -->
+      <div class="reveal">
+        <span class="text-accent font-black text-sm uppercase tracking-widest">Comienza hoy</span>
+        <h2 class="text-4xl font-black text-white mt-3 mb-6 leading-tight">Tu mejor inversión<br/>eres <span class="text-accent">tú mismo.</span></h2>
+        <p class="text-white/70 font-medium mb-10">Da el primer paso. Inscríbete ahora y forma parte de la comunidad SIDEP.</p>
+
+        <a href="https://wa.me/573026291451?text=Hola,%20quiero%20inscribirme%20en%20Instituto%20SIDEP" target="_blank"
+           class="flex items-center gap-3 bg-green-500 hover:bg-green-400 text-white font-black px-8 py-4 rounded-2xl text-lg transition shadow-2xl w-fit mb-10">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Escríbenos por WhatsApp
+        </a>
+
+        <div class="text-white/80 space-y-3 font-medium text-sm">
+          <div class="flex items-center gap-3"><span class="text-accent text-lg">📍</span> Carrera 106 #81-95, Bogotá, Colombia</div>
+          <div class="flex items-center gap-3"><span class="text-accent text-lg">📱</span> +57 302 6291451</div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="bg-white rounded-2xl p-8 shadow-2xl reveal">
+        <h3 class="text-dark font-black text-xl mb-6">Solicitar información</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="text-gray-600 text-sm font-bold block mb-1">Nombre completo</label>
+            <input type="text" placeholder="Tu nombre" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-primary focus:outline-none transition"/>
+          </div>
+          <div>
+            <label class="text-gray-600 text-sm font-bold block mb-1">Teléfono / WhatsApp</label>
+            <input type="tel" placeholder="+57 300 000 0000" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-primary focus:outline-none transition"/>
+          </div>
+          <div>
+            <label class="text-gray-600 text-sm font-bold block mb-1">Programa de interés</label>
+            <select class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-primary focus:outline-none transition bg-white">
+              <option value="">Selecciona un programa...</option>
+              <option>Técnico en Auxiliar Administrativo</option>
+              <option>Técnico en Contabilidad</option>
+              <option>Técnico en Sistemas con Énfasis en Programación</option>
+              <option>Técnico en Seguridad y Salud en el Trabajo</option>
+              <option>Técnico en Instalación y Reparación de Telecomunicaciones</option>
+              <option>Técnico en Marketing Digital</option>
+              <option>Cursos en Inteligencia Artificial</option>
+              <option>Microcertificaciones</option>
+              <option>Diplomados</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-gray-600 text-sm font-bold block mb-1">Mensaje (opcional)</label>
+            <textarea rows="3" placeholder="¿Alguna pregunta adicional?" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-primary focus:outline-none transition resize-none"></textarea>
+          </div>
+          <button onclick="sendForm()" class="w-full bg-primary text-white font-black py-3.5 rounded-xl hover:bg-dark transition text-base shadow-lg">
+            Enviar solicitud
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mapa -->
+    <div class="mt-16 rounded-2xl overflow-hidden shadow-2xl reveal h-72">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.3083161718523!2d-74.11663782552691!3d4.716408741522261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f84af95d52b6d%3A0x51c75441a68ee06f!2sCra.%20106%20%2381-95%2C%20Bogot%C3%A1!5e0!3m2!1sen!2sco!4v1777430157702!5m2!1sen!2sco"
+        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer class="bg-dark text-white py-14">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid md:grid-cols-4 gap-10 mb-10">
+      <!-- Brand -->
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <a href="#"><img src="assets/SIDEP_logo1.webp" alt="Logo SIDEP" class="h-10 w-auto hover:opacity-80 transition"/></a>
+        </div>
+        <p class="text-white/50 text-sm font-medium leading-relaxed">Educación para el Trabajo y el Desarrollo Humano. Avalado por la Secretaría de Educación de Bogotá.</p>
+      </div>
+      <!-- Programas -->
+      <div>
+        <h4 class="font-black text-accent mb-4 text-sm uppercase tracking-wider">Programas</h4>
+        <ul class="space-y-2 text-sm text-white/60 font-medium">
+          <li><a href="landing_tecnico_auxiliar_administrativo.html" class="hover:text-accent transition">Auxiliar Administrativo</a></li>
+          <li><a href="landing_tecnico_contable.html" class="hover:text-accent transition">Auxiliar Contable</a></li>
+          <li><a href="landing_tecnico_programacion.html" class="hover:text-accent transition">Sistemas y Programación</a></li>
+          <li><a href="landing_tecnico_SST.html" class="hover:text-accent transition">Seguridad y Salud en el Trabajo</a></li>
+          <li><a href="landing_tecnico_telecomunicaciones.html" class="hover:text-accent transition">Telecomunicaciones</a></li>
+          <li><a href="landing_tecnico_markering_digital.html" class="hover:text-accent transition">Marketing Digital</a></li>
+        </ul>
+      </div>
+      <!-- Servicios -->
+      <div>
+        <h4 class="font-black text-accent mb-4 text-sm uppercase tracking-wider">Servicios</h4>
+        <ul class="space-y-2 text-sm text-white/60 font-medium">
+          <li><a href="#ia" class="hover:text-accent transition">Cursos en IA</a></li>
+          <li><a href="#cursos_cortos" class="hover:text-accent transition">Microcertificaciones</a></li>
+          <li><a href="#cursos_cortos" class="hover:text-accent transition">Diplomados</a></li>
+          <li><a href="#servicios" class="hover:text-accent transition">Líneas de Servicios</a></li>
+          <li><a href="impacto_nacional/home_sector_publico.html" class="hover:text-accent transition">Sector Público</a></li>
+        </ul>
+      </div>
+      <!-- Contacto -->
+      <div>
+        <h4 class="font-black text-accent mb-4 text-sm uppercase tracking-wider">Contacto</h4>
+        <ul class="space-y-3 text-sm text-white/60 font-medium">
+          <li class="flex gap-2"><span>📍</span> Carrera 106 #81-95, Bogotá</li>
+          <li class="flex gap-2"><span>📱</span> +57 302 6291451</li>
+        </ul>
+        <!-- Redes sociales -->
+        <div class="mt-5 flex gap-3">
+          <!-- Facebook -->
+          <a href="https://www.facebook.com/people/Instituto-SIDEP/61557329054446/" target="_blank" title="Facebook" class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center hover:bg-[#1877F2] transition">
+            <svg class="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+          </a>
+          <!-- Instagram -->
+          <a href="https://www.instagram.com/institutosidep/" target="_blank" title="Instagram" class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center hover:bg-[#E1306C] transition">
+            <svg class="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <!-- TikTok -->
+          <a href="https://www.tiktok.com/@instituto.sidep" target="_blank" title="TikTok" class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center hover:bg-[#010101] transition">
+            <svg class="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.84a8.17 8.17 0 004.78 1.52V6.9a4.85 4.85 0 01-1.01-.21z"/></svg>
+          </a>
+          <!-- YouTube -->
+          <a href="https://www.youtube.com/@InstitutoSIDEP" target="_blank" title="YouTube" class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center hover:bg-[#FF0000] transition">
+            <svg class="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-white/10 pt-6 text-center text-white/40 text-xs font-medium">
+      © 2026 Instituto SIDEP. Todos los derechos reservados. · Construye tu camino hacia el éxito<br/>
+       <br/>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════════════
+     WHATSAPP FLOAT
+════════════════════════════════════════ -->
+<a id="wa-float" href="https://wa.me/573026291451?text=Hola,%20quiero%20info%20sobre%20los%20programas%20de%20SIDEP" target="_blank"
+   class="fixed bottom-6 left-6 z-50 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform">
+  <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+<script>
+  // ── Hero Slider ──
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+  let autoTimer;
+
+  function goSlide(n) {
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    currentSlide = (n + slides.length) % slides.length;
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+    resetAuto();
+  }
+  function nextSlide() { goSlide(currentSlide + 1); }
+  function prevSlide() { goSlide(currentSlide - 1); }
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(nextSlide, 5000);
+  }
+  resetAuto();
+
+  // ── Navbar scroll ──
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // ── Mobile menu ──
+  document.getElementById('menu-btn').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+  });
+  document.querySelectorAll('#mobile-menu a').forEach(a => a.addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.add('hidden');
+  }));
+
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── Form send via WhatsApp ──
+  function sendForm() {
+    const name = document.querySelector('input[type="text"]').value.trim();
+    const phone = document.querySelector('input[type="tel"]').value.trim();
+    const program = document.querySelector('select').value;
+    const msg = document.querySelector('textarea').value.trim();
+    if (!name || !phone) { alert('Por favor completa tu nombre y teléfono.'); return; }
+    const text = encodeURIComponent(`Hola, soy ${name} (${phone}). Me interesa: ${program || 'Sin especificar'}. ${msg}`);
+    window.open(`https://wa.me/573026291451?text=${text}`, '_blank');
+  }
+</script>
+
+
+<!-- ════════════════════════════════════
+     SHAIRO — Mascota flotante
+════════════════════════════════════ -->
+<div id="shairo-wrap" onclick="this.classList.toggle('active')">
+  <div id="shairo-tooltip">
+    <p style="color:#FEDF5D;font-weight:900;font-size:.875rem;margin-bottom:.25rem;">¡Hola! Soy Shairo 🐾</p>
+    <p style="color:rgba(255,255,255,.7);font-size:.75rem;line-height:1.5;margin-bottom:.75rem;">En SIDEP te ayudamos a homologar tu técnico con la universidad. ¿Hablamos?</p>
+    <a href="https://wa.me/573026291451?text=Hola%20Shairo%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20programas%20de%20SIDEP"
+       target="_blank"
+       style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:#22c55e;color:white;font-weight:900;font-size:.8rem;padding:.625rem 1rem;border-radius:.75rem;text-decoration:none;transition:background .2s;"
+       onmouseover="this.style.background='#16a34a'" onmouseout="this.style.background='#22c55e'">
+      <svg style="width:1rem;height:1rem;" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      ¡Hablemos por WhatsApp!
+    </a>
+  </div>
+  <img src="assets/SHAIRO.webp"
+       alt="Shairo mascota SIDEP"
+       style="width:4rem;height:4rem;border-radius:50%;object-fit:cover;border:3px solid #FEDF5D;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:transform .2s;"
+       onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"/>
+</div>
+
+<script>
+  // Shairo — cerrar al hacer clic fuera
+  document.addEventListener('click', function(e) {
+    const wrap = document.getElementById('shairo-wrap');
+    if (wrap && !wrap.contains(e.target)) wrap.classList.remove('active');
+  });
+
+  // ── Convenios y Alianzas: velocidad constante en píxeles por segundo ──
+  // La velocidad no depende del ancho de pantalla. Ajusta PX_PER_SEC para subir o bajar el ritmo.
+  (function() {
+    const track = document.querySelector('.ticker-track');
+    if (!track) return;
+
+    const PX_PER_SEC = 160; // 110 suave, 130 medio-rápido, 150 rápido
+    let pos = 0;
+    let lastTime = null;
+
+    function step(timestamp) {
+      if (!lastTime) lastTime = timestamp;
+
+      const delta = (timestamp - lastTime) / 1000;
+      lastTime = timestamp;
+
+      pos -= PX_PER_SEC * delta;
+
+      // Los logos están duplicados, por eso el loop reinicia al recorrer la mitad exacta.
+      const halfWidth = track.scrollWidth / 2;
+
+      if (Math.abs(pos) >= halfWidth) {
+        pos = 0;
+      }
+
+      track.style.transform = 'translateX(' + pos + 'px)';
+      requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  })();
+
+</script>
+
+</body>
+</html>

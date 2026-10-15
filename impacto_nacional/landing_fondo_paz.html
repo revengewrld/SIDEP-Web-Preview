@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fondo Paz: Sembradores de Convivencia | SIDEP</title>
+  <link rel="icon" type="image/webp" href="../assets/Favicon.webp" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#26519F',
+            accent: '#FEDF5D',
+            cyan: '#30B7E0',
+            dark: '#0D1B3E',
+            darker: '#081225'
+          },
+          fontFamily: { nunito: ['Nunito', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    *{font-family:'Nunito',sans-serif;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#0D1B3E;color:#fff;overflow-x:hidden}
+    .blob{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;opacity:.17}
+    .glass{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:18px;backdrop-filter:blur(12px)}
+    .card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.11);border-radius:24px}
+    .grad-text{background:linear-gradient(135deg,#FEDF5D 0%,#30B7E0 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .form-input{width:100%;padding:13px 15px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:white;outline:none;transition:.25s}
+    .form-input:focus{border-color:#FEDF5D;box-shadow:0 0 0 3px rgba(254,223,93,.12)}
+    .form-input::placeholder{color:rgba(255,255,255,.34)}
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}
+    .reveal.up{opacity:1;transform:translateY(0)}
+    #navbar{transition:background .3s,box-shadow .3s}
+    #navbar.scrolled{background:rgba(8,18,37,.96)!important;box-shadow:0 4px 28px rgba(0,0,0,.42)}
+  </style>
+</head>
+<body>
+
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50" style="background:rgba(13,27,62,.88);backdrop-filter:blur(16px)">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center">
+        <img src="../assets/SIDEP_logo1.webp" alt="SIDEP" class="h-12 w-auto" />
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-bold text-white/70">
+        <a href="#proyecto" class="hover:text-accent transition">El proyecto</a>
+        <a href="#componentes" class="hover:text-accent transition">Componentes</a>
+        <a href="#impacto" class="hover:text-accent transition">Impacto</a>
+      </div>
+      <a href="#contacto" class="bg-accent text-dark font-black px-5 py-3 rounded-xl hover:scale-105 transition">Solicitar información</a>
+    </div>
+  </nav>
+
+  <section id="hero" class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <div class="blob w-[520px] h-[520px] bg-primary top-0 left-0"></div>
+    <div class="blob w-[420px] h-[420px] bg-accent bottom-0 right-0"></div>
+    <div class="max-w-6xl mx-auto px-4 w-full py-16 grid lg:grid-cols-2 gap-12 items-center">
+      <div class="reveal">
+        <div class="mb-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-black text-sm tracking-wide" style="background:linear-gradient(135deg,#26519F,#30B7E0);box-shadow:0 4px 20px rgba(38,81,159,.42)">
+          🕊️ Paz, convivencia y desarrollo sostenible
+        </div>
+        <h1 class="text-4xl md:text-6xl font-black leading-tight mb-6">
+          Fondo Paz:<br/><span class="grad-text">Sembradores de Convivencia</span>
+        </h1>
+        <p class="text-white/70 text-lg font-medium mb-8 leading-relaxed max-w-xl">
+          Una iniciativa para reconstruir el tejido social, fortalecer las comunidades y crear nuevas oportunidades en poblaciones vulnerables, víctimas del conflicto y comunidades desplazadas.
+        </p>
+        <div class="flex flex-wrap gap-3 mb-10">
+          <span class="glass px-4 py-2 text-sm font-bold">✓ Formación técnica</span>
+          <span class="glass px-4 py-2 text-sm font-bold">✓ Apoyo psicosocial</span>
+          <span class="glass px-4 py-2 text-sm font-bold">✓ Desarrollo comunitario</span>
+        </div>
+        <a href="#contacto" class="inline-flex items-center gap-3 bg-accent text-dark font-black px-7 py-4 rounded-xl hover:scale-105 transition shadow-xl">Conoce el proyecto <span>→</span></a>
+      </div>
+
+      <div class="card p-3 reveal" style="transition-delay:.15s">
+        <div class="relative rounded-2xl overflow-hidden min-h-[420px] bg-darker">
+          <img src="assets_nacional/Fondo_paz1.jpg" alt="Proyecto Fondo Paz" class="absolute inset-0 w-full h-full object-cover" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(8,18,37,.8),transparent 60%)"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-7">
+            <p class="text-accent text-sm font-black uppercase tracking-widest">Restauración del tejido social</p>
+            <p class="text-2xl font-black mt-2">Comunidades que construyen paz y futuro.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proyecto" class="py-24 bg-darker relative">
+    <div class="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-14 items-center">
+      <div class="reveal">
+        <p class="text-cyan font-black text-sm uppercase tracking-widest mb-3">Nuestro propósito</p>
+        <h2 class="text-3xl md:text-5xl font-black leading-tight mb-6">Reconstruimos confianza mediante <span class="text-accent">educación y acompañamiento</span></h2>
+        <p class="text-white/65 text-lg leading-relaxed mb-5">
+          Fondo Paz integra formación técnica y apoyo psicosocial para acompañar a comunidades afectadas por el conflicto, el desplazamiento y otras condiciones de vulnerabilidad.
+        </p>
+        <p class="text-white/65 text-lg leading-relaxed">
+          La iniciativa impulsa capacidades personales, sociales y productivas que ayudan a recuperar la confianza, fortalecer la convivencia y promover el desarrollo sostenible del territorio.
+        </p>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4 reveal">
+        <div class="card p-6"><div class="text-3xl mb-4">🤝</div><h3 class="font-black text-xl mb-2">Tejido social</h3><p class="text-white/55">Fortalecimiento de vínculos, confianza y participación comunitaria.</p></div>
+        <div class="card p-6"><div class="text-3xl mb-4">🎓</div><h3 class="font-black text-xl mb-2">Formación técnica</h3><p class="text-white/55">Conocimientos y habilidades aplicables a nuevas oportunidades.</p></div>
+        <div class="card p-6"><div class="text-3xl mb-4">💬</div><h3 class="font-black text-xl mb-2">Apoyo psicosocial</h3><p class="text-white/55">Acompañamiento para el bienestar individual, familiar y colectivo.</p></div>
+        <div class="card p-6"><div class="text-3xl mb-4">🌱</div><h3 class="font-black text-xl mb-2">Sostenibilidad</h3><p class="text-white/55">Procesos comunitarios con visión de permanencia y crecimiento.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="componentes" class="py-24 relative overflow-hidden">
+    <div class="blob w-[380px] h-[380px] bg-cyan top-1/3 right-0"></div>
+    <div class="max-w-6xl mx-auto px-4 relative">
+      <div class="text-center max-w-3xl mx-auto mb-14 reveal">
+        <p class="text-accent font-black text-sm uppercase tracking-widest mb-3">Modelo integral</p>
+        <h2 class="text-3xl md:text-5xl font-black mb-5">Componentes del proyecto</h2>
+        <p class="text-white/60 text-lg">Una intervención que combina aprendizaje, bienestar y organización comunitaria.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <article class="card p-8 reveal"><div class="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-xl font-black mb-5">01</div><h3 class="text-xl font-black mb-3">Formación para la vida y el trabajo</h3><p class="text-white/55 leading-relaxed">Fortalecimiento de competencias técnicas, humanas y productivas para ampliar las oportunidades de las comunidades.</p></article>
+        <article class="card p-8 reveal" style="transition-delay:.1s"><div class="w-12 h-12 rounded-xl bg-cyan text-dark flex items-center justify-center text-xl font-black mb-5">02</div><h3 class="text-xl font-black mb-3">Acompañamiento psicosocial</h3><p class="text-white/55 leading-relaxed">Espacios orientados al bienestar, la recuperación de la confianza y la convivencia en los territorios.</p></article>
+        <article class="card p-8 reveal" style="transition-delay:.2s"><div class="w-12 h-12 rounded-xl bg-accent text-dark flex items-center justify-center text-xl font-black mb-5">03</div><h3 class="text-xl font-black mb-3">Empoderamiento comunitario</h3><p class="text-white/55 leading-relaxed">Herramientas para la participación, la organización local y la construcción colectiva de soluciones sostenibles.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="impacto" class="py-24 bg-darker">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="card p-8 md:p-12 grid lg:grid-cols-2 gap-12 items-center reveal">
+        <div>
+          <p class="text-cyan font-black text-sm uppercase tracking-widest mb-3">Población priorizada</p>
+          <h2 class="text-3xl md:text-4xl font-black mb-6">Una propuesta para quienes construyen paz desde sus territorios</h2>
+          <ul class="space-y-4 text-white/70 font-semibold">
+            <li class="flex gap-3"><span class="text-accent">●</span> Poblaciones en condición de vulnerabilidad.</li>
+            <li class="flex gap-3"><span class="text-accent">●</span> Víctimas del conflicto armado.</li>
+            <li class="flex gap-3"><span class="text-accent">●</span> Comunidades desplazadas.</li>
+            <li class="flex gap-3"><span class="text-accent">●</span> Organizaciones y líderes comunitarios.</li>
+          </ul>
+        </div>
+        <div class="glass p-8">
+          <p class="text-accent font-black text-lg mb-5">Resultados que buscamos</p>
+          <div class="space-y-5">
+            <div><h3 class="font-black mb-1">Comunidades fortalecidas</h3><p class="text-white/55 text-sm">Mayor capacidad para organizarse, participar y gestionar su desarrollo.</p></div>
+            <div><h3 class="font-black mb-1">Nuevas oportunidades</h3><p class="text-white/55 text-sm">Competencias que favorecen la inclusión educativa, social y productiva.</p></div>
+            <div><h3 class="font-black mb-1">Convivencia sostenible</h3><p class="text-white/55 text-sm">Herramientas para transformar conflictos y construir relaciones de confianza.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" class="py-24 relative overflow-hidden">
+    <div class="blob w-[420px] h-[420px] bg-accent bottom-0 left-1/3"></div>
+    <div class="max-w-5xl mx-auto px-4 relative">
+      <div class="card p-8 md:p-12 grid lg:grid-cols-2 gap-12 reveal">
+        <div>
+          <p class="text-accent font-black text-sm uppercase tracking-widest mb-3">Trabajemos juntos</p>
+          <h2 class="text-3xl md:text-5xl font-black mb-5">Llevemos Fondo Paz a más comunidades</h2>
+          <p class="text-white/60 text-lg leading-relaxed">Solicita información para conocer cómo esta iniciativa puede integrarse a los objetivos sociales y territoriales de tu organización.</p>
+        </div>
+        <form class="space-y-4" onsubmit="sendWhatsApp(event)">
+          <input id="nombre" type="text" required placeholder="Nombre completo" class="form-input" />
+          <input id="organizacion" type="text" placeholder="Entidad u organización" class="form-input" />
+          <input id="telefono" type="tel" required placeholder="Número de WhatsApp" class="form-input" />
+          <button type="submit" class="w-full bg-accent text-dark font-black py-4 rounded-xl hover:scale-[1.02] transition">Solicitar información por WhatsApp</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-darker border-t border-white/10 py-10">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
+      <img src="../assets/SIDEP_logo1.webp" alt="SIDEP" class="h-12 w-auto" />
+      <p class="text-white/40 text-sm text-center">Servicios Integrales de Desarrollo Educativo y Profesional</p>
+      <a href="home_sector_publico.html" class="text-accent font-black text-sm hover:text-white transition">← Volver al Sector Público</a>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/573026291451" target="_blank" aria-label="WhatsApp" class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-green-500 flex items-center justify-center text-2xl shadow-2xl hover:scale-110 transition">💬</a>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 30));
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('up'); });
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    function sendWhatsApp(event){
+      event.preventDefault();
+      const nombre = document.getElementById('nombre').value;
+      const organizacion = document.getElementById('organizacion').value;
+      const telefono = document.getElementById('telefono').value;
+      const mensaje = `Hola, soy ${nombre}. Represento a ${organizacion || 'una organización'} y deseo recibir información sobre el proyecto Fondo Paz: Sembradores de Convivencia. Mi número de contacto es ${telefono}.`;
+      window.open(`https://wa.me/573026291451?text=${encodeURIComponent(mensaje)}`, '_blank');
+    }
+  </script>
+</body>
+</html>

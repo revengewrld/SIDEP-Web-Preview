@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Cursos cortos en Inteligencia Artificial de SIDEP para aplicar herramientas de IA en el trabajo, los estudios y los negocios."/>
+  <title>Cursos Cortos en IA – Instituto SIDEP</title>
+  <link rel="icon" type="image/webp" href="https://sidep.edu.co/assets/Favicon.webp"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7C3AED',
+            cyan: '#22D3EE',
+            accent: '#FDE047',
+            coral: '#FB7185',
+            dark: '#111A3A',
+            darker: '#080D24'
+          },
+          fontFamily: { nunito: ['Nunito', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    *{font-family:'Nunito',sans-serif;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:#111A3A;
+      background-image:
+        radial-gradient(ellipse at 15% 8%,rgba(124,58,237,.20) 0%,transparent 58%),
+        radial-gradient(ellipse at 85% 88%,rgba(34,211,238,.12) 0%,transparent 58%);
+    }
+    .blob{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;opacity:.17}
+    #navbar{transition:background .3s,box-shadow .3s}
+    #navbar.scrolled{background:rgba(8,13,36,.97)!important;box-shadow:0 4px 30px rgba(0,0,0,.48)}
+    .grad-text{
+      background:linear-gradient(135deg,#FDE047 0%,#22D3EE 48%,#FB7185 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s,transform .7s}
+    .reveal.up{opacity:1;transform:translateY(0)}
+    .aline::after{content:'';display:block;width:54px;height:4px;background:#FDE047;border-radius:2px;margin-top:10px}
+    .aline-c::after{content:'';display:block;width:54px;height:4px;background:#FDE047;border-radius:2px;margin:10px auto 0}
+    .glass{
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.09);
+      backdrop-filter:blur(12px);
+      border-radius:1.25rem;
+      transition:.3s;
+    }
+    .glass:hover{background:rgba(255,255,255,.08);border-color:rgba(34,211,238,.42);transform:translateY(-4px)}
+    .gb-card{
+      background:linear-gradient(#111A3A,#111A3A) padding-box,
+                 linear-gradient(135deg,#7C3AED,#22D3EE,#FDE047) border-box;
+      border:2px solid transparent;
+      border-radius:1.25rem;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      background:rgba(34,211,238,.11);
+      border:1px solid rgba(34,211,238,.34);
+      color:#67E8F9;
+      border-radius:999px;
+      padding:.35rem .95rem;
+      font-size:.75rem;
+      font-weight:800;
+      letter-spacing:.05em;
+    }
+    .form-input{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1.5px solid rgba(255,255,255,.12);
+      border-radius:.75rem;
+      padding:.875rem 1rem;
+      color:white;
+      font-size:.9rem;
+      outline:none;
+      transition:.2s;
+    }
+    .form-input::placeholder{color:rgba(255,255,255,.35)}
+    .form-input:focus{border-color:#22D3EE;background:rgba(34,211,238,.06)}
+    .marquee-track{display:flex;gap:2rem;will-change:transform}
+    .marquee-outer{overflow:hidden}
+    .accordion-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+    .accordion-body.open{max-height:420px}
+    .accordion-btn svg{transition:transform .3s}
+    .accordion-btn.open svg{transform:rotate(180deg)}
+    .terminal{
+      background:#080D24;
+      border:1px solid rgba(34,211,238,.23);
+      border-radius:1.25rem;
+      overflow:hidden;
+      box-shadow:0 24px 70px rgba(0,0,0,.38);
+    }
+    .terminal-top{display:flex;align-items:center;gap:.45rem;padding:.9rem 1rem;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03)}
+    .dot{width:.7rem;height:.7rem;border-radius:50%}
+    .prompt-line{opacity:0;transform:translateY(5px);animation:showLine .45s ease forwards}
+    .prompt-line:nth-child(2){animation-delay:.45s}
+    .prompt-line:nth-child(3){animation-delay:.9s}
+    .prompt-line:nth-child(4){animation-delay:1.35s}
+    @keyframes showLine{to{opacity:1;transform:translateY(0)}}
+    @keyframes ring{0%{box-shadow:0 0 0 0 rgba(253,224,71,.5)}70%{box-shadow:0 0 0 14px rgba(253,224,71,0)}100%{box-shadow:0 0 0 0 rgba(253,224,71,0)}}
+    .pulse-ring{animation:ring 2s infinite}
+    @keyframes waPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 12px rgba(37,211,102,0)}}
+    #wa-float{animation:waPulse 2.2s infinite}
+    #shairo-wrap{position:fixed;bottom:1.75rem;right:1.75rem;z-index:60;cursor:pointer}
+    #shairo-tooltip{position:absolute;bottom:calc(100% + 12px);right:0;width:248px;background:#080D24;border:1.5px solid #22D3EE;border-radius:1rem;padding:1rem;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .3s,transform .3s;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+    #shairo-wrap:hover #shairo-tooltip,#shairo-wrap.active #shairo-tooltip{opacity:1;pointer-events:all;transform:translateY(0)}
+    #shairo-tooltip::after{content:'';position:absolute;bottom:-10px;right:24px;border:5px solid transparent;border-top-color:#22D3EE}
+    @media(max-width:360px){#shairo-tooltip{right:-10px;width:215px}}
+  </style>
+</head>
+<body class="text-white">
+
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50" style="background:rgba(17,26,58,.92);backdrop-filter:blur(16px)">
+    <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-16 relative">
+      <a href="https://sidep.edu.co/" class="flex items-center flex-shrink-0 hover:opacity-90 transition" aria-label="Ir al inicio de SIDEP">
+        <img src="https://sidep.edu.co/assets/SIDEP_logo1.webp" alt="Logo SIDEP" class="h-10 w-auto"/>
+      </a>
+      <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6">
+        <a href="https://sidep.edu.co/" class="text-white/70 hover:text-accent font-semibold text-sm transition">Inicio</a>
+        <span class="text-white/15">|</span>
+        <a href="https://sidep.edu.co/#cursos_cortos" class="text-white/70 hover:text-accent font-semibold text-sm transition">Cursos en IA</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="#hero-form" class="pulse-ring bg-accent text-darker font-black px-5 py-2.5 rounded-xl hover:bg-[#FEF08A] transition text-sm shadow-lg">Solicita información</a>
+        <button onclick="toggleMobileMenu()" class="md:hidden text-white p-1.5 rounded-lg hover:bg-white/10 transition" aria-label="Abrir menú">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mob-menu" class="hidden border-t border-white/10" style="background:rgba(8,13,36,.98)">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
+        <a href="https://sidep.edu.co/" class="px-4 py-3 rounded-xl hover:bg-white/10 text-white/80 hover:text-accent font-semibold text-sm transition">Inicio</a>
+        <a href="https://sidep.edu.co/#cursos_cortos" class="px-4 py-3 rounded-xl hover:bg-white/10 text-white/80 hover:text-accent font-semibold text-sm transition">Cursos en IA</a>
+        <a href="#hero-form" onclick="toggleMobileMenu()" class="mt-1 text-center bg-accent text-darker font-black px-5 py-3 rounded-xl text-sm">Solicita información</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+      <div class="blob w-[520px] h-[520px] bg-primary -top-20 -left-20"></div>
+      <div class="blob w-[420px] h-[420px] bg-cyan top-1/2 right-0"></div>
+      <div class="max-w-6xl mx-auto px-4 w-full py-16 grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <div class="mb-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-black text-sm tracking-wide" style="background:linear-gradient(135deg,#7C3AED,#4F46E5);box-shadow:0 4px 22px rgba(124,58,237,.38)">⚡ Cursos Cortos en IA</div>
+          <h1 class="text-4xl md:text-5xl font-black leading-tight mb-6">
+            Aprende herramientas de IA y conviértelas en<br/>
+            <span class="grad-text">resultados desde el primer día</span>
+          </h1>
+          <p class="text-white/70 text-lg font-medium mb-8 leading-relaxed max-w-xl">Formación práctica para usar Inteligencia Artificial en el trabajo, los estudios, los negocios y los proyectos personales con mayor criterio y productividad.</p>
+          <div class="flex flex-wrap gap-4 mb-10">
+            <div class="flex items-center gap-2 text-sm font-semibold text-white/80"><span class="text-accent text-lg">✓</span> Aprendizaje aplicado</div>
+            <div class="flex items-center gap-2 text-sm font-semibold text-white/80"><span class="text-accent text-lg">✓</span> Herramientas actuales</div>
+            <div class="flex items-center gap-2 text-sm font-semibold text-white/80"><span class="text-accent text-lg">✓</span> Enfoque laboral</div>
+            <div class="flex items-center gap-2 text-sm font-semibold text-white/80"><span class="text-accent text-lg">⚡</span> Formato ágil</div>
+          </div>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="glass p-4 text-center"><p class="text-xl font-black text-accent">Aprende</p><p class="text-xs text-white/55 font-semibold mt-1">Conceptos útiles</p></div>
+            <div class="glass p-4 text-center"><p class="text-xl font-black text-cyan">Practica</p><p class="text-xs text-white/55 font-semibold mt-1">Con herramientas</p></div>
+            <div class="glass p-4 text-center"><p class="text-xl font-black text-coral">Aplica</p><p class="text-xs text-white/55 font-semibold mt-1">En tu contexto</p></div>
+          </div>
+        </div>
+
+        <div id="hero-form" class="gb-card p-8 reveal" style="transition-delay:.2s">
+          <p class="text-cyan font-black text-xs uppercase tracking-widest mb-1">Explora la oferta</p>
+          <h2 class="text-2xl font-black mb-2">Solicita información gratis</h2>
+          <p class="text-white/50 text-sm font-medium mb-6">Un asesor te orientará sobre la oferta disponible, modalidad y proceso de inscripción.</p>
+          <form id="info-form" class="space-y-4">
+            <div><label for="nombre" class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">Nombre completo</label><input id="nombre" type="text" placeholder="Ej: María Gómez" class="form-input" required/></div>
+            <div><label for="telefono" class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">WhatsApp</label><input id="telefono" type="tel" placeholder="+57 300 000 0000" class="form-input"/></div>
+            <div><label for="correo" class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">Correo electrónico</label><input id="correo" type="email" placeholder="tucorreo@gmail.com" class="form-input"/></div>
+            <div><label class="text-white/60 text-xs font-bold uppercase tracking-wider block mb-1.5">Interés</label><div class="form-input text-white/60 cursor-not-allowed select-none flex items-center gap-2"><span class="text-accent">⚡</span> Cursos Cortos en IA</div></div>
+            <button type="submit" class="w-full bg-accent text-darker font-black py-4 rounded-xl hover:bg-[#FEF08A] transition text-base shadow-xl mt-2">💬 Quiero conocer la oferta</button>
+            <p class="text-white/30 text-xs text-center">Al continuar, abrirás WhatsApp con tu solicitud preparada.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div class="py-4 overflow-hidden border-y border-white/5 bg-darker marquee-outer">
+      <div class="marquee-track whitespace-nowrap text-sm font-bold text-white/30 uppercase tracking-widest">
+        <span>IA Generativa</span><span class="text-accent mx-6">★</span><span>Productividad</span><span class="text-accent mx-6">★</span><span>Prompts</span><span class="text-accent mx-6">★</span><span>Automatización</span><span class="text-accent mx-6">★</span><span>Creación de contenido</span><span class="text-accent mx-6">★</span><span>Uso responsable</span><span class="text-accent mx-6">★</span>
+        <span>IA Generativa</span><span class="text-accent mx-6">★</span><span>Productividad</span><span class="text-accent mx-6">★</span><span>Prompts</span><span class="text-accent mx-6">★</span><span>Automatización</span><span class="text-accent mx-6">★</span><span>Creación de contenido</span><span class="text-accent mx-6">★</span><span>Uso responsable</span><span class="text-accent mx-6">★</span>
+      </div>
+    </div>
+
+    <section class="py-24 relative overflow-hidden">
+      <div class="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-14 items-center">
+        <div class="reveal">
+          <div class="pill mb-5">🤖 Formación útil y directa</div>
+          <h2 class="text-4xl font-black mb-6 aline leading-tight">Cursos breves para necesidades concretas</h2>
+          <p class="text-white/60 font-medium leading-relaxed mb-5">Los cursos cortos permiten explorar una competencia específica, practicarla con herramientas actuales y comprender cómo aplicarla en situaciones reales.</p>
+          <p class="text-white/60 font-medium leading-relaxed">La propuesta se enfoca en el uso consciente de la Inteligencia Artificial como apoyo para organizar información, crear, analizar, comunicar y optimizar tareas.</p>
+        </div>
+        <div class="terminal reveal" style="transition-delay:.15s">
+          <div class="terminal-top"><span class="dot bg-coral"></span><span class="dot bg-accent"></span><span class="dot bg-cyan"></span><span class="ml-3 text-white/30 text-xs font-bold">aprendizaje_ia.sidep</span></div>
+          <div class="p-7 space-y-4 font-mono text-sm">
+            <p class="prompt-line text-white/45"><span class="text-cyan">01.</span> Identifica una tarea o necesidad</p>
+            <p class="prompt-line text-white/65"><span class="text-cyan">02.</span> Aprende a orientar la herramienta</p>
+            <p class="prompt-line text-white/80"><span class="text-cyan">03.</span> Practica y evalúa el resultado</p>
+            <p class="prompt-line text-accent font-black"><span class="text-cyan">04.</span> Aplica lo aprendido en tu contexto ✓</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-darker relative overflow-hidden">
+      <div class="max-w-6xl mx-auto px-4 relative">
+        <div class="text-center max-w-3xl mx-auto mb-14 reveal">
+          <div class="pill mx-auto mb-5">🧠 Áreas de aprendizaje</div>
+          <h2 class="text-4xl font-black aline-c">Competencias para trabajar mejor con IA</h2>
+          <p class="text-white/50 mt-5 font-medium">La oferta puede abordar distintas aplicaciones según los cursos disponibles y las necesidades de los participantes.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="glass p-6 reveal"><div class="text-3xl mb-4">💬</div><h3 class="font-black text-lg mb-2">IA generativa</h3><p class="text-white/50 text-sm font-medium">Comprender posibilidades, límites y formas de interacción con asistentes de IA.</p></div>
+          <div class="glass p-6 reveal" style="transition-delay:.07s"><div class="text-3xl mb-4">✍️</div><h3 class="font-black text-lg mb-2">Diseño de instrucciones</h3><p class="text-white/50 text-sm font-medium">Crear solicitudes claras, aportar contexto y mejorar progresivamente los resultados.</p></div>
+          <div class="glass p-6 reveal" style="transition-delay:.14s"><div class="text-3xl mb-4">⚙️</div><h3 class="font-black text-lg mb-2">Productividad</h3><p class="text-white/50 text-sm font-medium">Apoyar la planeación, organización, documentación y gestión de tareas.</p></div>
+          <div class="glass p-6 reveal" style="transition-delay:.21s"><div class="text-3xl mb-4">🎨</div><h3 class="font-black text-lg mb-2">Creación de contenido</h3><p class="text-white/50 text-sm font-medium">Explorar ideas y apoyar procesos de escritura, comunicación y producción creativa.</p></div>
+          <div class="glass p-6 reveal" style="transition-delay:.28s"><div class="text-3xl mb-4">🔁</div><h3 class="font-black text-lg mb-2">Procesos y automatización</h3><p class="text-white/50 text-sm font-medium">Reconocer tareas repetitivas y posibilidades de optimización con herramientas digitales.</p></div>
+          <div class="glass p-6 reveal" style="transition-delay:.35s"><div class="text-3xl mb-4">🛡️</div><h3 class="font-black text-lg mb-2">Uso responsable</h3><p class="text-white/50 text-sm font-medium">Revisar resultados, proteger información y usar la IA con criterio humano.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 relative">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-14 reveal"><div class="pill mx-auto mb-5">🚀 Metodología aplicada</div><h2 class="text-4xl font-black aline-c">Aprende haciendo, mejora practicando</h2><p class="text-white/50 mt-5 font-medium max-w-2xl mx-auto">Una experiencia enfocada en comprender, probar y transferir lo aprendido a una necesidad real.</p></div>
+        <div class="grid md:grid-cols-4 gap-5">
+          <div class="glass p-6 text-center reveal"><span class="inline-flex w-12 h-12 rounded-xl bg-primary/20 text-cyan items-center justify-center font-black mb-4">01</span><h3 class="font-black mb-2">Explora</h3><p class="text-white/45 text-sm">Comprende qué puede aportar la herramienta.</p></div>
+          <div class="glass p-6 text-center reveal" style="transition-delay:.08s"><span class="inline-flex w-12 h-12 rounded-xl bg-primary/20 text-cyan items-center justify-center font-black mb-4">02</span><h3 class="font-black mb-2">Practica</h3><p class="text-white/45 text-sm">Resuelve actividades con acompañamiento.</p></div>
+          <div class="glass p-6 text-center reveal" style="transition-delay:.16s"><span class="inline-flex w-12 h-12 rounded-xl bg-primary/20 text-cyan items-center justify-center font-black mb-4">03</span><h3 class="font-black mb-2">Evalúa</h3><p class="text-white/45 text-sm">Revisa calidad, precisión y pertinencia.</p></div>
+          <div class="glass p-6 text-center reveal border border-accent/20" style="transition-delay:.24s"><span class="inline-flex w-12 h-12 rounded-xl bg-accent/15 text-accent items-center justify-center font-black mb-4">04</span><h3 class="font-black text-accent mb-2">Aplica</h3><p class="text-white/45 text-sm">Lleva lo aprendido a tu propio contexto.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-darker relative overflow-hidden">
+      <div class="blob w-[440px] h-[440px] bg-primary right-0 top-0 opacity-10"></div>
+      <div class="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-14 items-center relative">
+        <div class="reveal"><div class="pill mb-5">👥 ¿Para quién es?</div><h2 class="text-4xl font-black mb-6 aline">IA para aprender, trabajar y emprender</h2><p class="text-white/60 font-medium leading-relaxed mb-8">Los cursos están dirigidos a personas interesadas en desarrollar habilidades prácticas y aprovechar la IA en diferentes contextos.</p><div class="grid sm:grid-cols-2 gap-4"><div class="glass p-4 flex items-center gap-3"><span class="text-2xl">🎓</span><span class="font-bold text-sm">Estudiantes</span></div><div class="glass p-4 flex items-center gap-3"><span class="text-2xl">💼</span><span class="font-bold text-sm">Profesionales</span></div><div class="glass p-4 flex items-center gap-3"><span class="text-2xl">🚀</span><span class="font-bold text-sm">Emprendedores</span></div><div class="glass p-4 flex items-center gap-3"><span class="text-2xl">🏢</span><span class="font-bold text-sm">Equipos de trabajo</span></div></div></div>
+        <div class="gb-card p-8 reveal" style="transition-delay:.15s"><p class="text-accent font-black text-sm uppercase tracking-widest mb-5">Herramientas y criterio</p><div class="space-y-5"><div class="flex items-start gap-4"><span class="w-10 h-10 rounded-xl bg-cyan/15 flex items-center justify-center flex-shrink-0">💡</span><div><h3 class="font-black">Formular mejores preguntas</h3><p class="text-white/45 text-sm">Comunicar objetivos, contexto y condiciones con claridad.</p></div></div><div class="flex items-start gap-4"><span class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">🔍</span><div><h3 class="font-black">Validar respuestas</h3><p class="text-white/45 text-sm">Revisar información, detectar errores y mejorar resultados.</p></div></div><div class="flex items-start gap-4"><span class="w-10 h-10 rounded-xl bg-coral/15 flex items-center justify-center flex-shrink-0">🧩</span><div><h3 class="font-black">Integrar la IA al proceso</h3><p class="text-white/45 text-sm">Usarla como apoyo sin reemplazar el juicio y la responsabilidad.</p></div></div></div></div>
+      </div>
+    </section>
+
+    <section class="py-24 relative">
+      <div class="max-w-4xl mx-auto px-4">
+        <div class="text-center mb-14 reveal"><div class="pill mx-auto mb-5">❓ Preguntas frecuentes</div><h2 class="text-4xl font-black aline-c">Antes de comenzar</h2></div>
+        <div class="space-y-4 reveal">
+          <div class="glass overflow-hidden"><button class="accordion-btn w-full flex items-center justify-between gap-4 p-6 text-left" onclick="toggleAccordion(this)"><strong>¿Necesito experiencia previa en Inteligencia Artificial?</strong><svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button><div class="accordion-body"><p class="px-6 pb-6 text-white/55 text-sm font-medium">La orientación depende del curso disponible. SIDEP puede indicarte el nivel y los conocimientos recomendados para cada opción.</p></div></div>
+          <div class="glass overflow-hidden"><button class="accordion-btn w-full flex items-center justify-between gap-4 p-6 text-left" onclick="toggleAccordion(this)"><strong>¿Qué herramientas se pueden trabajar?</strong><svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button><div class="accordion-body"><p class="px-6 pb-6 text-white/55 text-sm font-medium">La oferta puede incluir herramientas como ChatGPT, Copilot y otras soluciones de IA, según el enfoque y la disponibilidad de cada curso.</p></div></div>
+          <div class="glass overflow-hidden"><button class="accordion-btn w-full flex items-center justify-between gap-4 p-6 text-left" onclick="toggleAccordion(this)"><strong>¿Dónde consulto duración, modalidad y precio?</strong><svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button><div class="accordion-body"><p class="px-6 pb-6 text-white/55 text-sm font-medium">Solicita información por el formulario o WhatsApp. Un asesor te compartirá la oferta vigente y sus condiciones.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-darker relative overflow-hidden">
+      <div class="blob w-[560px] h-[560px] bg-cyan opacity-5 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+      <div class="max-w-3xl mx-auto px-4 text-center relative z-10 reveal"><div class="text-7xl mb-6">⚡</div><h2 class="text-4xl md:text-5xl font-black mb-5 leading-tight">Da el siguiente paso y convierte la IA en una <span class="grad-text">habilidad práctica</span></h2><p class="text-white/60 font-medium text-lg mb-10 max-w-2xl mx-auto">Conoce la oferta vigente de cursos cortos y encuentra una opción conectada con tus objetivos.</p><a href="https://wa.me/573026291451?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20Cursos%20Cortos%20en%20IA%20de%20SIDEP" target="_blank" rel="noopener" class="inline-flex items-center gap-3 bg-green-500 hover:bg-green-400 text-white font-black px-9 py-5 rounded-2xl text-lg transition shadow-2xl">💬 Hablar con un asesor</a></div>
+    </section>
+  </main>
+
+  <footer class="bg-darker border-t border-white/5 py-10">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-5">
+      <div class="flex items-center gap-3"><a href="https://sidep.edu.co/" class="hover:opacity-80 transition"><img src="https://sidep.edu.co/assets/SIDEP_logo1.webp" alt="Logo SIDEP" class="h-10 w-auto"/></a><span class="text-white/30 text-sm font-medium">Cursos Cortos en IA</span></div>
+      <p class="text-white/30 text-xs font-medium text-center">© 2026 Instituto SIDEP<br/>Servicios Integrales de Desarrollo Educativo y Profesional</p>
+      <a href="https://wa.me/573026291451?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20Cursos%20Cortos%20en%20IA%20de%20SIDEP" target="_blank" rel="noopener" class="text-green-400 hover:text-green-300 font-bold text-sm transition">WhatsApp: +57 302 6291451</a>
+    </div>
+  </footer>
+
+  <div id="shairo-wrap" onclick="this.classList.toggle('active')">
+    <div id="shairo-tooltip"><p class="text-cyan font-black text-sm mb-1">¡Hola! Soy Shairo 🐾</p><p class="text-white/70 text-xs font-medium leading-relaxed mb-3">Te ayudo a conocer la oferta vigente de Cursos Cortos en IA. ¿Hablamos?</p><a href="https://wa.me/573026291451?text=Hola%20Shairo%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20Cursos%20Cortos%20en%20IA%20de%20SIDEP" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 bg-green-500 text-white font-black px-4 py-2.5 rounded-xl text-sm hover:bg-green-400 transition">¡Hablemos por WhatsApp!</a></div>
+    <img src="https://sidep.edu.co/assets/SHAIRO.webp" alt="Shairo, mascota de SIDEP" class="w-16 h-16 rounded-full object-cover border-4 border-cyan shadow-2xl hover:scale-110 transition-transform"/>
+  </div>
+
+  <a id="wa-float" href="https://wa.me/573026291451?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20Cursos%20Cortos%20en%20IA%20de%20SIDEP" target="_blank" rel="noopener" aria-label="Hablar por WhatsApp" class="fixed bottom-6 left-6 z-50 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform"><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+
+  <script>
+    const whatsappNumber = '573026291451';
+
+    function toggleMobileMenu(){document.getElementById('mob-menu').classList.toggle('hidden')}
+
+    function toggleAccordion(button){
+      const body = button.nextElementSibling;
+      const wasOpen = body.classList.contains('open');
+      document.querySelectorAll('.accordion-body').forEach(item => item.classList.remove('open'));
+      document.querySelectorAll('.accordion-btn').forEach(item => item.classList.remove('open'));
+      if(!wasOpen){body.classList.add('open');button.classList.add('open')}
+    }
+
+    document.getElementById('info-form').addEventListener('submit', function(event){
+      event.preventDefault();
+      const nombre = document.getElementById('nombre').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const mensaje = `Hola, soy ${nombre}. Quiero información sobre los Cursos Cortos en IA de SIDEP.${telefono ? ` Mi número es ${telefono}.` : ''}${correo ? ` Mi correo es ${correo}.` : ''}`;
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(mensaje)}`, '_blank', 'noopener');
+    });
+
+    window.addEventListener('scroll', function(){document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30)});
+
+    const observer = new IntersectionObserver(entries => {entries.forEach(entry => {if(entry.isIntersecting){entry.target.classList.add('up');observer.unobserve(entry.target)}})}, {threshold:.12});
+    document.querySelectorAll('.reveal').forEach(item => observer.observe(item));
+
+    document.addEventListener('click', function(event){const wrap=document.getElementById('shairo-wrap');if(wrap&&!wrap.contains(event.target))wrap.classList.remove('active')});
+
+    (function(){
+      const track=document.querySelector('.marquee-track');if(!track)return;
+      const speed=90;let position=0;let lastTime=null;
+      function move(timestamp){if(!lastTime)lastTime=timestamp;const delta=(timestamp-lastTime)/1000;lastTime=timestamp;position-=speed*delta;const half=track.scrollWidth/2;if(Math.abs(position)>=half)position=0;track.style.transform=`translateX(${position}px)`;requestAnimationFrame(move)}
+      requestAnimationFrame(move);
+    })();
+  </script>
+</body>
+</html>
